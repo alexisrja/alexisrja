@@ -32,7 +32,7 @@
 
 ### 👨💻 Sobre Mí
 
-¡Hola! Soy un programador con **más de 30 años en el mundo de la informática** y **20 años dedicado al desarrollo de software**. Desde **Santiago de Chile**, he vivido la evolución tecnológica en primera línea.
+¡Hola! Soy un programador con **más de 4 años en el mundo de la informática** y **2 años dedicado al desarrollo de software**. Desde **Palafox, Guerrero**, he vivido la evolución tecnológica en primera línea.
 
 Mi día a día se basa en resolver problemas con código. Aunque tengo formación de base, reconozco que gran parte de lo que sé hoy se lo debo a mis papás, amigos y colegas que he conocido en mi trayectoria.
 
