@@ -1,96 +1,34 @@
-<h3 align="center">
-  <img src="https://user-images.githubusercontent.com/59575502/127335491-fdba1874-e943-4c3c-ab8c-678ffe22f8b8.png" alt="header">
-</h3>
+<!-- Banner --> <p align="center"> <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0f2027,50:203a43,100:2c5364&height=180&section=header&text=Alexis%20Ram%C3%ADrez&fontSize=46&fontColor=ffffff&fontAlignY=38&desc=Ingenier%C3%ADa%20en%20Sistemas%20Computacionales%20%C2%B7%20Desarrollador%20Web&descAlignY=60&descSize=16" alt="Alexis Ramírez" width="100%"> </p> <p align="center"> <a href="https://github.com/alexisrja"> <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&pause=1200&color=58A6FF&center=true&vCenter=true&width=520&lines=Construyo+sitios+y+apps+que+resuelven+problemas+reales;Next.js+%C2%B7+TypeScript+%C2%B7+Node.js+%C2%B7+Python;Siempre+aprendiendo%2C+siempre+compartiendo" alt="Typing SVG"> </a> </p> <p align="center"> <img src="https://komarev.com/ghpvc/?username=alexisrja&label=Visitas&color=58a6ff&style=flat" alt="Visitas"> <img src="https://img.shields.io/github/followers/alexisrja?label=Seguidores&style=flat&color=58a6ff" alt="Seguidores"> </p>
+👨‍💻 Sobre mí
+Estudiante de Ingeniería en Sistemas Computacionales en la Universidad Mexiquense del Bicentenario, con más de 4 años en informática y 2 desarrollando software.
 
-<h1 align="center">
-  ¡Bienvenido! 👋 ¡Soy alexrja !
-</h1>
+🔭 Construyo sitios y aplicaciones web para negocios locales: catálogos, inventarios, puntos de venta y sistemas de gestión.
+🎓 Me interesa la tecnología educativa: plataformas gamificadas y apps que funcionan sin internet.
+🌱 Ahora mismo aprendo visión artificial con Python y sigo profundizando en Next.js + TypeScript.
+🤝 Mucho de lo que sé se lo debo a mi familia, amigos y colegas. Por eso me gusta compartir lo que aprendo.
+📍 México
+🚀 Proyectos destacados
+<table> <tr> <td width="50%" valign="top"> <h3>🎪 <a href="https://github.com/alexisrja/carpa-de-saberes">Carpa de Saberes</a></h3> <p>Escuela digital para niños del circo (4 a 11 años): 6 materias, 36 lecciones y 216 ejercicios que se califican solos. Funciona <b>sin internet</b> y guarda el avance en el dispositivo.</p> <p> <img src="https://img.shields.io/badge/HTML-E34F26?style=flat-square&logo=html5&logoColor=white"> <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black"> <img src="https://img.shields.io/badge/Offline--first-2ea44f?style=flat-square"> </p> <a href="https://carpa-de-saberes.vercel.app">🔗 Ver demo</a> </td> <td width="50%" valign="top"> <h3>🎮 <a href="https://github.com/alexisrja/EduClick">VisionArti (EduClick)</a></h3> <p>Plataforma de aprendizaje <b>gamificado con IA</b> para secundaria, con contenido y ejercicios en siete materias: matemáticas, física, biología, química y más.</p> <p> <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black"> <img src="https://img.shields.io/badge/IA-8A2BE2?style=flat-square"> </p> <a href="https://github.com/alexisrja/EduClick">📂 Ver código</a> </td> </tr> <tr> <td width="50%" valign="top"> <h3>💸 <a href="https://github.com/alexisrja/RemitPay">RemitPay</a></h3> <p>App web para <b>envío de remesas internacionales</b> basada en el protocolo Interledger: transferencias multi-moneda entre wallets compatibles.</p> <p> <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black"> <img src="https://img.shields.io/badge/Interledger-000000?style=flat-square"> </p> <a href="https://github.com/alexisrja/RemitPay">📂 Ver código</a> </td> <td width="50%" valign="top"> <h3>💬 <a href="https://github.com/alexisrja/wepsa">Chat en tiempo real</a></h3> <p>Chat con <b>Socket.IO</b>, autenticación JWT, historial en MongoDB, usuarios en línea e indicador de "escribiendo…".</p> <p> <img src="https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=nodedotjs&logoColor=white"> <img src="https://img.shields.io/badge/Socket.IO-010101?style=flat-square&logo=socketdotio&logoColor=white"> <img src="https://img.shields.io/badge/MongoDB-47A248?style=flat-square&logo=mongodb&logoColor=white"> </p> <a href="https://wepsa.vercel.app">🔗 Ver demo</a> </td> </tr> <tr> <td width="50%" valign="top"> <h3>🌸 <a href="https://github.com/alexisrja/plamari">Plamari</a></h3> <p>Folleto web para una distribuidora de claveles: catálogo, precios de mayoreo y menudeo, preguntas frecuentes y <b>cotización directa por WhatsApp</b>.</p> <p> <img src="https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=nextdotjs&logoColor=white"> <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white"> <img src="https://img.shields.io/badge/Tailwind-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white"> </p> <a href="https://plamari.vercel.app">🔗 Ver demo</a> </td> <td width="50%" valign="top"> <h3>📡 <a href="https://github.com/alexisrja/gestor">SISGINET</a></h3> <p>Sistema para proveedores de internet: gestión de clientes y servicios, dashboard con estadísticas y control de ingresos mensuales.</p> <p> <img src="https://img.shields.io/badge/Flask-000000?style=flat-square&logo=flask&logoColor=white"> <img src="https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white"> </p> <a href="https://github.com/alexisrja/gestor">📂 Ver código</a> </td> </tr> </table> <details> <summary><b>Más proyectos</b></summary> <br>
+Proyecto	Descripción	Links
+Rifas JAPS	Sitio de rifas con compra de boletos en línea	código · demo
+InvAccy	Inventario de rosas para una productora floral	código · demo
+Reconocimiento de emociones	Visión artificial con OpenCV, DeepFace y MediaPipe	código
+Punto de venta	Sistema de punto de venta en Python	código
+</details>
+🛠️ Tecnologías
+Lenguajes
 
-<p align="center">
-  <!-- Badges dinámicos de GitHub -->
-  <a href="https://github.com/TheVoidC?tab=repositories">
-    <img src="https://custom-icon-badges.herokuapp.com/badge/Repositorios-blue.svg?logo=repo" alt="Repos">
-  </a>
-  <a href="https://github.com/TheVoidC?tab=stars">
-    <img src="https://custom-icon-badges.herokuapp.com/badge/Estrellas-yellow.svg?logo=star" alt="Stars">
-  </a>
-  <a href="https://github.com/TheVoidC?tab=issues">
-    <img src="https://custom-icon-badges.herokuapp.com/badge/Issues-red.svg?logo=issue" alt="Issues">
-  </a>
-  <a href="https://github.com/TheVoidC?tab=projects">
-    <img src="https://custom-icon-badges.herokuapp.com/badge/Forks-orange.svg?logo=fork" alt="Forks">
-  </a>
-  <a href="https://github.com/TheVoidC">
-    <img src="https://custom-icon-badges.herokuapp.com/badge/Commits-green.svg?logo=commit" alt="Commits">
-  </a>
-  <a href="https://github.com/TheVoidC?tab=repositories">
-    <img src="https://custom-icon-badges.herokuapp.com/badge/Pull%20Requests-purple.svg?logo=pr" alt="PRs">
-  </a>
-</p>
+<p> <img src="https://skillicons.dev/icons?i=ts,js,py,java,dart,html,css&theme=dark" alt="Lenguajes"> </p>
+Frontend y backend
 
----
+<p> <img src="https://skillicons.dev/icons?i=nextjs,react,astro,tailwind,nodejs,express,flask,opencv&theme=dark" alt="Frameworks"> </p>
+Bases de datos
 
-### 👨💻 Sobre Mí
+<p> <img src="https://skillicons.dev/icons?i=mongodb,mysql,sqlite&theme=dark" alt="Bases de datos"> </p>
+Herramientas
 
-¡Hola! Soy un programador con **más de 4 años en el mundo de la informática** y **2 años dedicado al desarrollo de software**. Desde **Palafox, Guerrero**, he vivido la evolución tecnológica en primera línea.
-
-Mi día a día se basa en resolver problemas con código. Aunque tengo formación de base, reconozco que gran parte de lo que sé hoy se lo debo a mis papás, amigos y colegas que he conocido en mi trayectoria.
-
-Siempre estoy abierto a compartir conocimientos y aprender. Si buscas a alguien con experiencia, sólidos fundamentos y los pies en la tierra, aquí estoy.
-
----
-
-### 🛠️ Tecnologías y Herramientas
-
-<p align="center">
-  <!-- Lenguajes -->
-
-  <img src="https://user-images.githubusercontent.com/59575502/127426759-a687aa90-d647-46c9-86f7-c8e948f8095e.png" alt="python" title="Python" width="40" height="40">
-  <img src="https://user-images.githubusercontent.com/59575502/127428627-06e9cfab-80ba-45a2-8891-96121397ec9c.png" alt="java" title="Java" width="40" height="40">
-
-  
-  <!-- Web -->
-  <img src="https://user-images.githubusercontent.com/59575502/127426309-0b2bbd98-9756-4798-ad10-f60da4a4d5fb.png" alt="html5" title="HTML5" width="40" height="40">
-  <img src="https://user-images.githubusercontent.com/59575502/127426315-abe01b56-a385-455d-9caf-40bc7022a3d3.png" alt="css3" title="CSS3" width="40" height="40">
-  <img src="https://user-images.githubusercontent.com/59575502/127426312-4a7a6d79-4b40-4b06-8c94-824ea3e8410e.png" alt="javascript" title="JavaScript" width="40" height="40">
-  <img src="https://user-images.githubusercontent.com/59575502/127428633-1f18254b-97f9-4358-aec4-3143874035f8.png" alt="react" title="React" width="40" height="40">
-  <img src="https://user-images.githubusercontent.com/59575502/127428631-5ab21a62-ac89-4919-9408-724df88ab245.png" alt="nodejs" title="Node.js" width="40" height="40">
-  
-  <!-- Bases de datos -->
-  <img src="https://user-images.githubusercontent.com/59575502/127426153-6f6d6c91-9778-43d9-a1df-95df61f23438.png" alt="mongodb" title="MongoDB" width="40" height="40">
-  <img src="https://user-images.githubusercontent.com/59575502/127428630-7563c6a0-4ce4-4b21-9473-b7c2b149f3c4.png" alt="mysql" title="MySQL" width="40" height="40">
-  
-  <!-- Móvil -->
-
-  <img src="https://user-images.githubusercontent.com/59575502/127427342-0ff4c732-b5dd-4f67-b4d3-e6cc3d9d7f72.png" alt="android" title="Android" width="40" height="40">
-  
-  <!-- Herramientas -->
-  <img src="https://user-images.githubusercontent.com/59575502/127427975-18b027b4-dc7f-4616-b9b4-42019b54e8db.png" alt="git" title="Git" width="40" height="40">
-  <img src="https://user-images.githubusercontent.com/59575502/127427981-bfaa39a1-bce1-4f63-85c4-f61f14f39f46.png" alt="windows" title="Windows" width="40" height="40">
-  <img src="https://user-images.githubusercontent.com/59575502/127427976-be2bc801-ad71-4480-bda4-a6f64926cb7b.png" alt="linux" title="Linux" width="40" height="40">
-  <img src="https://user-images.githubusercontent.com/59575502/127427977-74d3fe09-d1c3-447a-9446-b28aae6df5cb.png" alt="ubuntu" title="Ubuntu" width="40" height="40">
-  <img src="https://user-images.githubusercontent.com/59575502/127427980-4b5ba4cf-daee-474f-a500-872181ccc470.png" alt="vscode" title="VS Code" width="40" height="40">
-  <img src="https://user-images.githubusercontent.com/59575502/127427979-7eddf4e0-1d7e-4735-8564-6a0f641130d6.png" alt="visualstudio" title="Visual Studio" width="40" height="40">
-</p>
-
----
-
-
-
-
-
-<p align="center">
-  <a href="mailto:tu@email.com">
-    <img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email">
-  </a>
-  <a href="https://linkedin.com/in/tuperfil">
-    <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn">
-  </a>
-  <a href="https://twitter.com/tucuenta">
-    <img src="https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white" alt="Twitter">
-  </a>
-</p>
-
-<div align="center">
-<img src="https://www.aalpha.net/wp-content/uploads/2020/12/full-stack-development.gif" align="center" style="width: 100%; height:100% " />
-</div> 
+<p> <img src="https://skillicons.dev/icons?i=git,github,vercel,vscode,visualstudio,androidstudio,linux,ubuntu,windows&theme=dark" alt="Herramientas"> </p>
+📊 Actividad
+<p align="center"> <img src="https://streak-stats.demolab.com?user=alexisrja&theme=github-dark-blue&hide_border=true&locale=es" alt="Racha de contribuciones"> </p>
+📫 Contacto
+<p align="center"> <!-- Reemplaza TU_CORREO y TU_PERFIL con tus datos reales, o borra el badge que no uses --> <a href="mailto:TU_CORREO"> <img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email"> </a> <a href="https://www.linkedin.com/in/TU_PERFIL"> <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"> </a> <a href="https://github.com/alexisrja"> <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"> </a> </p> <p align="center"> <img src="https://capsule-render.vercel.app/api?type=waving&color=0:2c5364,50:203a43,100:0f2027&height=100&section=footer" width="100%"> </p>
