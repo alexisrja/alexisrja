@@ -305,7 +305,7 @@ def arcade(initials: str, score: int, year: str, accent: str) -> str:
     """Pantalla CRT con lluvia tipo Matrix, las iniciales en píxeles y detalles arcade."""
     rng = random.Random(initials + year)  # determinista: el SVG solo cambia si cambian los datos
     ac = ARCADE
-    X, Y, SW, SH = 824, 62, 340, 242
+    X, Y, SW, SH = 784, 62, 380, 242
     cx = X + SW / 2
     out = [
         "<defs>"
@@ -335,7 +335,7 @@ def arcade(initials: str, score: int, year: str, accent: str) -> str:
 
     # Nave que dispara desde abajo (va antes de las iniciales para que queden encima).
     ship_w = len(SHIP[0]) * 3
-    sx, sy = X + 14, Y + SH - 46
+    sx, sy = X + 14, Y + SH - 38
     out.append(f'<g class="ship" style="--sx:{SW - 28 - ship_w}px">'
                f'<rect class="shot" x="{sx + ship_w / 2 - 1.5:g}" y="{sy - 10}" width="3" height="8" fill="{ac["score"]}"/>'
                f'{sprite(SHIP, sx, sy, 3, ac["ship"])}</g>')
@@ -343,10 +343,10 @@ def arcade(initials: str, score: int, year: str, accent: str) -> str:
     # Iniciales: los píxeles se "decodifican" en orden aleatorio y luego laten en diagonal.
     letters = [GLYPHS[ch] for ch in initials if ch in GLYPHS]
     if letters:
-        cell, pitch = 16, 20
+        cell, pitch = 19, 22
         cols = len(letters) * 6 - 1
         ax = cx - (cols * pitch - (pitch - cell)) / 2
-        ay = Y + 56
+        ay = Y + 48
         off, on = [], []
         for li, glyph in enumerate(letters):
             for r, row in enumerate(glyph):
@@ -366,7 +366,7 @@ def arcade(initials: str, score: int, year: str, accent: str) -> str:
 
     # Alien que marcha de lado a lado con dos cuadros de animación.
     alien_w = len(ALIEN[0][0]) * 3
-    alx, aly = X + 12, Y + 29
+    alx, aly = X + 12, Y + 25
     out.append(f'<g class="march" style="--mx:{SW - 24 - alien_w}px">'
                f'<g class="f1">{sprite(ALIEN[0], alx, aly, 3, ac["alien"])}</g>'
                f'<g class="f2">{sprite(ALIEN[1], alx, aly, 3, ac["alien"])}</g></g>')
