@@ -1,0 +1,65 @@
+name: Visitas
+
+# Libro de visitas: cada issue con la etiqueta "visita" agrega su título a
+# assets/guestbook.json, regenera las tarjetas y se cierra solo.
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: perfil
+  cancel-in-progress: false
+
+jobs:
+  firmar:
+    if: contains(github.event.issue.labels.*.name, 'visita')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar fonttools
+        run: pip install fonttools==4.63.0
+
+      - name: Registrar la firma
+        id: firma
+        run: python scripts/visitas.py
+
+      - name: Regenerar imágenes
+        if: steps.firma.outputs.resultado == 'ok'
+        run: python scripts/generate.py
+        env:
+          GH_TOKEN: ${{ secrets.PROFILE_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Commit
+        if: steps.firma.outputs.resultado == 'ok'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets
+          git commit -m "chore: nueva firma en el libro de visitas (#${{ github.event.issue.number }})"
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Agradecer y cerrar
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUM: ${{ github.event.issue.number }}
+          RESULTADO: ${{ steps.firma.outputs.resultado }}
+        run: |
+          if [ "$RESULTADO" = "ok" ]; then
+            gh issue comment "$NUM" --body "¡Gracias por firmar! Tu mensaje ya está en el libro de visitas del perfil (GitHub tarda unos minutos en refrescar la imagen). Este issue se cierra solo."
+          else
+            gh issue comment "$NUM" --body "No pude leer tu mensaje: el título quedó vacío o solo tenía enlaces. Abre un issue nuevo con tu mensaje en el título."
+          fi
+          gh issue close "$NUM"

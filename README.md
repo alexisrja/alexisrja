@@ -112,11 +112,85 @@
 
 ---
 
+## `$ ssh alexis@umb`
+
+Conectado a mi máquina. **Haz clic en un comando para ejecutarlo:**
+
+<!-- Cada comando es un <details>: es lo único que se puede "clicar" en un README de GitHub. -->
+
+<details>
+<summary><code>$ neofetch</code></summary>
+<br>
+<picture>
+  <source media="(prefers-color-scheme: dark)"  srcset="assets/neofetch-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/neofetch-light.svg">
+  <img src="assets/neofetch-dark.svg" width="100%" alt="neofetch: Fedora Linux, niri, Caelestia, zsh, alacritty, VS Code">
+</picture>
+</details>
+
+<details>
+<summary><code>$ man alexis</code></summary>
+<br>
+<picture>
+  <source media="(prefers-color-scheme: dark)"  srcset="assets/man-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/man-light.svg">
+  <img src="assets/man-dark.svg" width="100%" alt="man alexis: página de manual">
+</picture>
+</details>
+
+<details>
+<summary><code>$ history | tail -5</code></summary>
+<br>
+<!-- Últimos commits públicos reales; el workflow los actualiza cada 12 h. -->
+<picture>
+  <source media="(prefers-color-scheme: dark)"  srcset="assets/history-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/history-light.svg">
+  <img src="assets/history-dark.svg" width="100%" alt="Mis últimos cinco commits">
+</picture>
+</details>
+
+<details>
+<summary><code>$ nsnake</code></summary>
+<br>
+<!-- Generado por Platane/snk en el workflow: una serpiente se come la gráfica de contribuciones. -->
+<picture>
+  <source media="(prefers-color-scheme: dark)"  srcset="assets/snake-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/snake-light.svg">
+  <img src="assets/snake-dark.svg" width="100%" alt="Serpiente comiéndose mis contribuciones">
+</picture>
+</details>
+
+<details>
+<summary><code>$ echo "tu mensaje" >> visitas.log</code> &nbsp;<sub>← firma el libro de visitas</sub></summary>
+<br>
+<picture>
+  <source media="(prefers-color-scheme: dark)"  srcset="assets/visitas-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/visitas-light.svg">
+  <img src="assets/visitas-dark.svg" width="100%" alt="Libro de visitas">
+</picture>
+<br><br>
+<a href="https://github.com/alexisrja/alexisrja/issues/new?template=visita.md"><img src="https://img.shields.io/badge/%E2%9C%8D%20firmar%20el%20libro%20de%20visitas-3fb950?style=for-the-badge&labelColor=0d1117" alt="Firmar el libro de visitas"></a>
+<br>
+<sub>Abre un issue con tu mensaje en el título; aparece aquí en unos minutos y el issue se cierra solo.</sub>
+</details>
+
+<details>
+<summary><code>$ sudo rm -rf /</code></summary>
+<br>
+<picture>
+  <source media="(prefers-color-scheme: dark)"  srcset="assets/sudo-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/sudo-light.svg">
+  <img src="assets/sudo-dark.svg" width="100%" alt="visitante no está en el archivo sudoers. Este incidente será reportado.">
+</picture>
+</details>
+
+---
+
 <div align="center">
 
 ## `$ cat stack.txt`
 
-<img src="https://skillicons.dev/icons?i=ts,js,nextjs,react,tailwind,nodejs,express,python,flask,opencv,mongodb,mysql,git,vercel&perline=7" alt="stack">
+<img src="https://skillicons.dev/icons?i=ts,js,nextjs,react,tailwind,nodejs,express,python,flask,opencv,mongodb,mysql,git,linux,vercel&perline=8" alt="stack">
 
 </div>
 
@@ -194,6 +268,26 @@
 ---
 
 <div align="center">
+
+<a href="https://alexisrja.github.io">
+<picture>
+  <source media="(prefers-color-scheme: dark)"  srcset="assets/continue-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/continue-light.svg">
+  <img src="assets/continue-dark.svg" width="420" alt="CONTINUE? PRESS START: abre mi portafolio">
+</picture>
+</a>
+
+<details>
+<summary><kbd>↑</kbd> <kbd>↑</kbd> <kbd>↓</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd> <kbd>←</kbd> <kbd>→</kbd> <kbd>B</kbd> <kbd>A</kbd></summary>
+<br>
+<picture>
+  <source media="(prefers-color-scheme: dark)"  srcset="assets/konami-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/konami-light.svg">
+  <img src="assets/konami-dark.svg" width="420" alt="Código Konami: 30 vidas extra">
+</picture>
+</details>
+
+<br>
 
 <sub>`hecho con café y código · Estado de México`</sub>
 

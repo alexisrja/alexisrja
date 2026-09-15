@@ -38,6 +38,35 @@
     ],
     "bars": [["CAFÉ", 0.85], ["CÓDIGO", 0.95], ["SUEÑO", 0.3]]
   },
+  "system": {
+    "host": "alexis@umb",
+    "fields": [
+      ["OS", "Fedora Linux"],
+      ["WM", "niri"],
+      ["DE", "Caelestia"],
+      ["Shell", "zsh"],
+      ["Terminal", "alacritty"],
+      ["Editor", "VS Code"],
+      ["Stack", "Next.js · TypeScript · Node.js · Python"]
+    ]
+  },
+  "man": {
+    "name": "alexis - ingeniero en sistemas que convierte problemas reales en web apps para negocios y educación",
+    "synopsis": "alexis [--negocios] [--edtech] [--ia] [--cafe=N] proyecto",
+    "description": "Acepta ideas a medio cocinar y entrega catálogos, inventarios, puntos de venta y plataformas educativas que la gente sí usa. Corre sobre Fedora, niri y mucho café. Compatible con equipos, negocios locales y salones de clase.",
+    "options": [
+      ["--negocios", "modo por defecto: web apps para negocios locales."],
+      ["--edtech", "activa plataformas gamificadas y apps que funcionan sin internet."],
+      ["--ia", "experimental: visión artificial con OpenCV y MediaPipe."],
+      ["--cafe=N", "tazas por día. Valor recomendado: 3. Máximo probado: 6."]
+    ],
+    "bugs": "Duerme al 30%. Si encuentra un bug a las 2 a.m., lo arregla en vez de dormir. Se reportan en el libro de visitas.",
+    "see_also": "alexisrja.github.io, git(1), coffee(7)",
+    "footer": "Fedora Linux"
+  },
+  "konami": {
+    "fact": "Dato desbloqueado: me debes un café."
+  },
   "playlists": [
     { "title": "Coding Mode", "platform": "spotify", "kind": "playlist", "url": "https://open.spotify.com/playlist/37i9dQZF1DX5trt9i14X7j" },
     { "title": "Knight's Last Watch", "platform": "youtube", "kind": "Lostvibe", "url": "https://www.youtube.com/watch?v=NYzWdziId60&list=RDNYzWdziId60&start_radio=1" }

@@ -17,7 +17,7 @@ permissions:
 
 concurrency:
   group: perfil
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   generar:
@@ -39,6 +39,14 @@ jobs:
           # Sin él, GITHUB_TOKEN solo ve actividad pública.
           GH_TOKEN: ${{ secrets.PROFILE_TOKEN || secrets.GITHUB_TOKEN }}
 
+      - name: Serpiente de contribuciones
+        uses: Platane/snk/svg-only@v3
+        with:
+          github_user_name: alexisrja
+          outputs: |
+            assets/snake-dark.svg?palette=github-dark
+            assets/snake-light.svg?palette=github-light
+
       - name: Commit si hay cambios
         run: |
           git config user.name "github-actions[bot]"
@@ -48,5 +56,6 @@ jobs:
             echo "Sin cambios."
           else
             git commit -m "chore: actualizar imágenes del perfil"
-            git push
+            git pull --rebase origin main
+            git push origin HEAD:main
           fi

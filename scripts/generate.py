@@ -719,8 +719,11 @@ def write(name: str, content: str) -> None:
 
 
 def main() -> None:
+    import consola  # tarjetas de la consola interactiva; vive aparte para no engordar este archivo
+
     cfg = json.loads((ASSETS / "profile.json").read_text(encoding="utf-8"))
-    data = fetch(cfg, get_token())
+    token = get_token()
+    data = fetch(cfg, token)
     user = data["user"]
     coll = user["contributionsCollection"]
     weeks = coll["contributionCalendar"]["weeks"]
@@ -742,8 +745,29 @@ def main() -> None:
     images = {p["repo"]: base64.b64encode((ROOT / p["image"]).read_bytes()).decode()
               for p in cfg["projects"] if p.get("image")}
 
+    host = cfg["banner"]["host"]
+    commits = consola.fetch_commits(cfg["user"], token)
+    guestbook = consola.load_guestbook()
+    guest_total = len(json.loads(consola.GUESTBOOK.read_text(encoding="utf-8"))["entries"]) if consola.GUESTBOOK.exists() else 0
+    system_dyn = [
+        ("Uptime", consola.uptime(user["createdAt"])),
+        ("Packages", f"{repos['totalCount']} repos (github)"),
+        ("Commits", f"{coll['totalCommitContributions']} (12 meses)"),
+        ("Lenguajes", ", ".join(m[0] for m in mix[:3] if m[0] != "Otros")),
+    ]
+
     print("Generando:")
     for name, th in THEMES.items():
+        if cfg.get("system"):
+            write(f"neofetch-{name}.svg", consola.neofetch_card(cfg, system_dyn, th))
+        if cfg.get("man"):
+            write(f"man-{name}.svg", consola.man_card(cfg, th))
+        write(f"history-{name}.svg", consola.history_card(host, cfg["user"], commits, th))
+        write(f"sudo-{name}.svg", consola.sudo_card(host, th, name))
+        write(f"visitas-{name}.svg", consola.guestbook_card(host, guestbook, guest_total, th))
+        write(f"continue-{name}.svg", consola.continue_card(th))
+        if cfg.get("konami"):
+            write(f"konami-{name}.svg", consola.konami_card(cfg, th))
         write(f"banner-{name}.svg", banner(cfg, user, th, coll["contributionCalendar"]["totalContributions"]))
         write(f"radar-{name}.svg", radar(cfg, th))
         write(f"card-langs-{name}.svg", languages_card(mix, th))
