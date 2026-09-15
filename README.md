@@ -133,7 +133,7 @@
   <img src="assets/playlist-0-dark.svg" width="400" alt="Coding Mode en Spotify">
 </picture>
 </a>
-<a href="https://www.youtube.com/watch?v=jfKfPfyJRdk">
+<a href="https://www.youtube.com/watch?v=NYzWdziId60&list=RDNYzWdziId60&start_radio=1">
 <picture>
   <source media="(prefers-color-scheme: dark)"  srcset="assets/playlist-1-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="assets/playlist-1-light.svg">
