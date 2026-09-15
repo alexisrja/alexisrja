@@ -30,5 +30,8 @@ Herramientas
 <p> <img src="https://skillicons.dev/icons?i=git,github,vercel,vscode,visualstudio,androidstudio,linux,ubuntu,windows&theme=dark" alt="Herramientas"> </p>
 📊 Actividad
 <p align="center"> <img src="https://streak-stats.demolab.com?user=alexisrja&theme=github-dark-blue&hide_border=true&locale=es" alt="Racha de contribuciones"> </p>
+
+<a href="https://git.io/streak-stats"><img src="https://github-readme-streak-stats.herokuapp.com?user=alexisrja&theme=monokai&locale=es&short_numbers=true&date_format=j%20M%5B%20Y%5D" alt="GitHub Streak" /></a>
+
 📫 Contacto
 <p align="center"> <!-- Reemplaza TU_CORREO y TU_PERFIL con tus datos reales, o borra el badge que no uses --> <a href="mailto:TU_CORREO"> <img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email"> </a> <a href="https://www.linkedin.com/in/TU_PERFIL"> <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"> </a> <a href="https://github.com/alexisrja"> <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"> </a> </p> <p align="center"> <img src="https://capsule-render.vercel.app/api?type=waving&color=0:2c5364,50:203a43,100:0f2027&height=100&section=footer" width="100%"> </p>
