@@ -1,3 +1,10 @@
 {
-  "entries": []
+  "entries": [
+    {
+      "issue": 1,
+      "login": "alexisrja",
+      "message": "¡Hola desde ...!",
+      "date": "2026-09-15"
+    }
+  ]
 }
