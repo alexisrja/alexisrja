@@ -16,6 +16,7 @@ import datetime as dt
 import json
 import math
 import os
+import random
 import subprocess
 import sys
 import urllib.request
@@ -59,6 +60,40 @@ ANIM_CSS = (
     "@keyframes grow{to{transform:scale(1)}}"
     "@media (prefers-reduced-motion:reduce){.fade,.pop,.grow{animation:none;opacity:1;transform:none}"
     ".type{display:none}.blink{animation:none}}"
+)
+
+# Pantalla arcade del banner. Siempre oscura, en los dos temas, como un CRT.
+ARCADE = {
+    "screen": "#050a06", "rain": "#39d353", "head": "#d2ffd2", "off": "#1b2a1f",
+    "levels": ["#006d32", "#26a641", "#39d353"], "p1": "#ff5f56", "score": "#ffbd2e",
+    "coin": "#58a6ff", "alien": "#d2a8ff", "ship": "#58a6ff", "text": "#e6edf3", "muted": "#8b949e",
+}
+RAIN_CHARS = "ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789Z:=*+<>"
+ALIEN = (
+    ["..#######..", ".#########.", "##..###..##", "###########", "..##...##..", ".##.....##.", "#.........#"],
+    ["..#######..", ".#########.", "##..###..##", "###########", "..##...##..", "...##.##...", "..#.....#.."],
+)
+SHIP = ["....#....", "...###...", ".#######.", "#########", "##.#.#.##"]
+
+ARCADE_CSS = (
+    # La columna mide 240px: arranca arriba de la pantalla y termina abajo de ella.
+    ".rain{animation:rain var(--d) linear infinite}"
+    "@keyframes rain{from{transform:translateY(-180px)}to{transform:translateY(292px)}}"
+    ".pulse{animation:pulse 2.4s ease-in-out infinite}"
+    "@keyframes pulse{50%{opacity:.5}}"
+    ".march{animation:march 7s steps(28) infinite alternate}"
+    "@keyframes march{to{transform:translateX(var(--mx))}}"
+    ".f1{animation:f1 .6s steps(1) infinite}.f2{opacity:0;animation:f2 .6s steps(1) infinite}"
+    "@keyframes f1{50%{opacity:0}}@keyframes f2{50%{opacity:1}}"
+    ".ship{animation:ship 5.5s ease-in-out infinite alternate}"
+    "@keyframes ship{to{transform:translateX(var(--sx))}}"
+    ".shot{animation:shot 1.1s linear infinite}"
+    "@keyframes shot{from{transform:translateY(0)}85%{opacity:1}to{transform:translateY(-150px);opacity:0}}"
+    ".bl{animation:bl 1s steps(1) infinite}@keyframes bl{50%{opacity:0}}"
+    ".swapA{animation:sa 8s steps(1) infinite}.swapB{opacity:0;animation:sb 8s steps(1) infinite}"
+    "@keyframes sa{50%{opacity:0}}@keyframes sb{50%{opacity:1}}"
+    "@media (prefers-reduced-motion:reduce){.rain,.pulse,.march,.f1,.ship,.bl,.swapA{animation:none}"
+    ".f2,.swapB,.shot{animation:none;display:none}}"
 )
 
 
@@ -204,7 +239,7 @@ def wrap(text: str, width: int, max_lines: int) -> list[str]:
 
 # -------------------------------------------------------------- dibujos ---
 
-def banner(cfg: dict, user: dict, th: dict) -> str:
+def banner(cfg: dict, user: dict, th: dict, score: int) -> str:
     W, H = 1200, 330
     b = cfg["banner"]
     host = b["host"]
@@ -253,30 +288,101 @@ def banner(cfg: dict, user: dict, th: dict) -> str:
                f'font-size="{fs}" xml:space="preserve">{prompt_tspans()}<tspan class="blink" '
                f'fill="{th["accent"]}">▋</tspan></text></g>')
 
-    # Arte de iniciales estilo gráfica de contribuciones.
-    letters = [GLYPHS[ch] for ch in cfg.get("initials", "") if ch in GLYPHS]
+    out.append(arcade(cfg.get("initials", ""), score, user["createdAt"][:4], th["accent"]))
+    return svg(W, H, f"{host} — {cmd}", "".join(out), css=ANIM_CSS + ARCADE_CSS)
+
+
+def sprite(rows: list[str], x: float, y: float, px: int, color: str) -> str:
+    d = "".join(f"M{x + c * px:g} {y + r * px:g}h{px}v{px}h-{px}z"
+                for r, row in enumerate(rows) for c, ch in enumerate(row) if ch == "#")
+    return f'<path d="{d}" fill="{color}"/>'
+
+
+def arcade(initials: str, score: int, year: str, accent: str) -> str:
+    """Pantalla CRT con lluvia tipo Matrix, las iniciales en píxeles y detalles arcade."""
+    rng = random.Random(initials + year)  # determinista: el SVG solo cambia si cambian los datos
+    ac = ARCADE
+    X, Y, SW, SH = 824, 62, 340, 242
+    cx = X + SW / 2
+    out = [
+        "<defs>"
+        f'<clipPath id="screen"><rect x="{X}" y="{Y}" width="{SW}" height="{SH}" rx="8"/></clipPath>'
+        '<pattern id="scan" width="4" height="4" patternUnits="userSpaceOnUse">'
+        '<rect width="4" height="2" fill="#000" fill-opacity=".28"/></pattern>'
+        '<radialGradient id="vig" r="70%"><stop offset="60%" stop-color="#000" stop-opacity="0"/>'
+        '<stop offset="100%" stop-color="#000" stop-opacity=".65"/></radialGradient>'
+        '<filter id="glow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="2.2" result="b"/>'
+        '<feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'
+        "</defs>",
+        f'<rect x="{X}" y="{Y}" width="{SW}" height="{SH}" rx="8" fill="{ac["screen"]}"/>',
+        '<g clip-path="url(#screen)">',
+    ]
+
+    # Lluvia: columnas de 16 caracteres que caen a distinta velocidad; la cabeza brilla más.
+    for x in range(X + 8, X + SW - 4, 16):
+        small = rng.random() < 0.4
+        dur = rng.uniform(3.5, 8.0)
+        spans = "".join(
+            f'<tspan x="{x}" dy="15" fill="{ac["head"] if j == 15 else ac["rain"]}" '
+            f'fill-opacity="{1 if j == 15 else (j + 1) / 18:.2f}">{t(rng.choice(RAIN_CHARS))}</tspan>'
+            for j in range(16))
+        out.append(f'<g class="rain" style="--d:{dur:.2f}s;animation-delay:-{rng.uniform(0, dur):.2f}s" '
+                   f'opacity="{.35 if small else .6}"><text font-family="{MONO}" '
+                   f'font-size="{11 if small else 14}">{spans}</text></g>')
+
+    # Nave que dispara desde abajo (va antes de las iniciales para que queden encima).
+    ship_w = len(SHIP[0]) * 3
+    sx, sy = X + 14, Y + SH - 46
+    out.append(f'<g class="ship" style="--sx:{SW - 28 - ship_w}px">'
+               f'<rect class="shot" x="{sx + ship_w / 2 - 1.5:g}" y="{sy - 10}" width="3" height="8" fill="{ac["score"]}"/>'
+               f'{sprite(SHIP, sx, sy, 3, ac["ship"])}</g>')
+
+    # Iniciales: los píxeles se "decodifican" en orden aleatorio y luego laten en diagonal.
+    letters = [GLYPHS[ch] for ch in initials if ch in GLYPHS]
     if letters:
-        cell, pitch = 20, 25
+        cell, pitch = 16, 20
         cols = len(letters) * 6 - 1
-        ax = 1140 - cols * pitch + (pitch - cell)
-        ay = 74
+        ax = cx - (cols * pitch - (pitch - cell)) / 2
+        ay = Y + 56
+        off, on = [], []
         for li, glyph in enumerate(letters):
             for r, row in enumerate(glyph):
-                for c, on in enumerate(row):
+                for c, ch in enumerate(row):
                     col = li * 6 + c
                     px, py = ax + col * pitch, ay + r * pitch
-                    if on == "#":
-                        level = 2 + (r * 7 + col * 3) % 3
-                        d = 0.4 + col * 0.07 + r * 0.03
-                        out.append(f'<rect class="pop" style="animation-delay:{d:.2f}s" x="{px}" y="{py}" '
-                                   f'width="{cell}" height="{cell}" rx="4" fill="{th["levels"][level]}"/>')
+                    if ch == "#":
+                        color = ac["levels"][(r * 7 + col * 3) % 3]
+                        on.append(f'<g class="pop" style="animation-delay:{rng.uniform(.3, 1.6):.2f}s">'
+                                  f'<rect class="pulse" style="animation-delay:{(col + r) * .12:.2f}s" x="{px:g}" '
+                                  f'y="{py}" width="{cell}" height="{cell}" rx="3" fill="{color}"/></g>')
                     else:
-                        out.append(f'<rect x="{px}" y="{py}" width="{cell}" height="{cell}" rx="4" fill="{th["grid"]}"/>')
-        center = ax + (cols * pitch - (pitch - cell)) / 2
-        year = user["createdAt"][:4]
-        out.append(f'<text x="{center:.0f}" y="{ay + 7 * pitch + 22}" text-anchor="middle" font-family="{MONO}" '
-                   f'font-size="13" fill="{th["muted"]}">en GitHub desde {year}</text>')
-    return svg(W, H, f"{host} — {cmd}", "".join(out))
+                        off.append(f'<rect x="{px:g}" y="{py}" width="{cell}" height="{cell}" rx="3" '
+                                   f'fill="{ac["off"]}" fill-opacity=".55"/>')
+        out.append("".join(off))
+        out.append(f'<g filter="url(#glow)">{"".join(on)}</g>')
+
+    # Alien que marcha de lado a lado con dos cuadros de animación.
+    alien_w = len(ALIEN[0][0]) * 3
+    alx, aly = X + 12, Y + 29
+    out.append(f'<g class="march" style="--mx:{SW - 24 - alien_w}px">'
+               f'<g class="f1">{sprite(ALIEN[0], alx, aly, 3, ac["alien"])}</g>'
+               f'<g class="f2">{sprite(ALIEN[1], alx, aly, 3, ac["alien"])}</g></g>')
+
+    hud = f'font-family="{MONO}" font-size="12" font-weight="700"'
+    out.append(f'<text class="bl" x="{X + 14}" y="{Y + 20}" {hud} fill="{ac["p1"]}">1UP</text>')
+    out.append(f'<text x="{X + SW - 14}" y="{Y + 20}" text-anchor="end" {hud} fill="{ac["text"]}">'
+               f'HI-SCORE <tspan fill="{ac["score"]}">{score:06d}</tspan></text>')
+    out.append(f'<g class="swapA"><text class="bl" x="{cx:g}" y="{Y + SH - 10}" text-anchor="middle" {hud} '
+               f'letter-spacing="2" fill="{ac["coin"]}">INSERT COIN</text></g>')
+    out.append(f'<g class="swapB"><text x="{cx:g}" y="{Y + SH - 10}" text-anchor="middle" {hud} '
+               f'fill="{ac["muted"]}">EN GITHUB DESDE {year}</text></g>')
+    out.append("</g>")
+
+    out.append(f'<rect x="{X}" y="{Y}" width="{SW}" height="{SH}" rx="8" fill="url(#scan)"/>'
+               f'<rect x="{X}" y="{Y}" width="{SW}" height="{SH}" rx="8" fill="url(#vig)"/>'
+               f'<rect x="{X + .5}" y="{Y + .5}" width="{SW - 1}" height="{SH - 1}" rx="8" fill="none" '
+               f'stroke="{accent}" stroke-opacity=".55"/>')
+    return "".join(out)
 
 
 def radar(cfg: dict, th: dict) -> str:
@@ -452,7 +558,7 @@ def main() -> None:
 
     print("Generando:")
     for name, th in THEMES.items():
-        write(f"banner-{name}.svg", banner(cfg, user, th))
+        write(f"banner-{name}.svg", banner(cfg, user, th, coll["contributionCalendar"]["totalContributions"]))
         write(f"radar-{name}.svg", radar(cfg, th))
         write(f"card-langs-{name}.svg", languages_card(mix, th))
         write(f"card-stats-{name}.svg", stats_card(stats, th))
