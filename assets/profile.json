@@ -27,32 +27,38 @@
     {
       "repo": "carpa-de-saberes",
       "title": "carpa-de-saberes",
-      "description": "Escuela digital para niños del circo: 6 materias y 216 ejercicios que funcionan sin internet."
+      "description": "Escuela digital para niños del circo: 6 materias y 216 ejercicios que funcionan sin internet.",
+      "image": "assets/shots/carpa-de-saberes.jpg"
     },
     {
       "repo": "EduClick",
       "title": "VisionArti",
-      "description": "Plataforma de aprendizaje gamificado con IA para secundaria, con ejercicios en siete materias."
+      "description": "Plataforma de aprendizaje gamificado con IA para secundaria, con ejercicios en siete materias.",
+      "image": "assets/shots/EduClick.jpg"
     },
     {
       "repo": "RemitPay",
       "title": "RemitPay",
-      "description": "Remesas internacionales sobre Interledger: envíos multi-moneda entre wallets compatibles."
+      "description": "Remesas internacionales sobre Interledger: envíos multi-moneda entre wallets compatibles.",
+      "image": "assets/shots/RemitPay.jpg"
     },
     {
       "repo": "wepsa",
       "title": "chat-tiempo-real",
-      "description": "Chat con Socket.IO, login con JWT, historial en MongoDB y contador de usuarios en línea."
+      "description": "Chat con Socket.IO, login con JWT, historial en MongoDB y contador de usuarios en línea.",
+      "image": "assets/shots/wepsa.jpg"
     },
     {
       "repo": "plamari",
       "title": "plamari",
-      "description": "Folleto web para una distribuidora de claveles, con catálogo y cotización por WhatsApp."
+      "description": "Folleto web para una distribuidora de claveles, con catálogo y cotización por WhatsApp.",
+      "image": "assets/shots/plamari.jpg"
     },
     {
       "repo": "gestor",
       "title": "SISGINET",
-      "description": "Gestión de clientes y servicios para un proveedor de internet, con dashboard e ingresos."
+      "description": "Gestión de clientes y servicios para un proveedor de internet, con dashboard e ingresos.",
+      "image": "assets/shots/gestor.jpg"
     }
   ]
 }

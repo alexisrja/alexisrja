@@ -12,6 +12,7 @@ assets/profile.json. Cada imagen se genera en versión clara y oscura.
 """
 from __future__ import annotations
 
+import base64
 import datetime as dt
 import json
 import math
@@ -19,6 +20,7 @@ import os
 import random
 import subprocess
 import sys
+import urllib.parse
 import urllib.request
 from pathlib import Path
 from xml.sax.saxutils import escape
@@ -505,13 +507,29 @@ def weekday(date: str) -> int:
     return (dt.date.fromisoformat(date).weekday() + 1) % 7
 
 
-def project_card(project: dict, repo: dict | None, th: dict) -> str:
-    W, H = 400, 140
-    out = [card(W, H, th),
-           f'<text x="24" y="38" font-family="{MONO}" font-size="16" font-weight="700" fill="{th["accent2"]}">'
-           f'<tspan fill="{th["muted"]}">~/</tspan>{t(project["title"])}</text>']
+def project_card(project: dict, repo: dict | None, th: dict, user: str, image: str | None) -> str:
+    """Tarjeta de proyecto. Con `image` (JPEG en base64) muestra la captura en una ventana de navegador."""
+    W = 400
+    bar, shot_h = 26, 170
+    top = bar + shot_h if image else 0
+    H = 140 + top
+    out = [card(W, H, th)]
+    if image:
+        home = (repo or {}).get("homepageUrl")
+        address = urllib.parse.urlparse(home).netloc if home else f"github.com/{user}/{project['repo']}"
+        out.append(f'<clipPath id="shot"><path d="M.5 {top}V10.5A10 10 0 0 1 10.5 .5H389.5A10 10 0 0 1 399.5 10.5V{top}Z"/></clipPath>'
+                   f'<g clip-path="url(#shot)"><rect width="{W}" height="{bar}" fill="{th["panel"]}"/>'
+                   + "".join(f'<circle cx="{16 + i * 13}" cy="13" r="4" fill="{c}"/>'
+                             for i, c in enumerate(("#ff5f56", "#ffbd2e", "#27c93f")))
+                   + f'<text x="{W / 2:g}" y="17" text-anchor="middle" font-family="{MONO}" font-size="10" '
+                     f'fill="{th["muted"]}">{t(address)}</text>'
+                     f'<image href="data:image/jpeg;base64,{image}" y="{bar}" width="{W}" height="{shot_h}" '
+                     f'preserveAspectRatio="xMidYMin slice"/></g>'
+                     f'<path d="M1 {bar + .5}H{W - 1}M1 {top + .5}H{W - 1}" stroke="{th["border"]}"/>')
+    out.append(f'<text x="24" y="{top + 38}" font-family="{MONO}" font-size="16" font-weight="700" fill="{th["accent2"]}">'
+               f'<tspan fill="{th["muted"]}">~/</tspan>{t(project["title"])}</text>')
     for i, line in enumerate(wrap(project["description"], 50, 2)):
-        out.append(f'<text x="24" y="{66 + i * 19}" font-family="{SANS}" font-size="13" '
+        out.append(f'<text x="24" y="{top + 66 + i * 19}" font-family="{SANS}" font-size="13" '
                    f'fill="{th["text"]}">{t(line)}</text>')
     x = 24
     lang = (repo or {}).get("primaryLanguage")
@@ -556,6 +574,10 @@ def main() -> None:
     mix = language_mix(repos["nodes"], cfg.get("include_private_languages", False),
                        set(cfg.get("ignore_languages", [])))
 
+    # Capturas opcionales: "image" en cada proyecto, ruta relativa a la raíz del repo.
+    images = {p["repo"]: base64.b64encode((ROOT / p["image"]).read_bytes()).decode()
+              for p in cfg["projects"] if p.get("image")}
+
     print("Generando:")
     for name, th in THEMES.items():
         write(f"banner-{name}.svg", banner(cfg, user, th, coll["contributionCalendar"]["totalContributions"]))
@@ -564,7 +586,8 @@ def main() -> None:
         write(f"card-stats-{name}.svg", stats_card(stats, th))
         write(f"heatmap-{name}.svg", heatmap(weeks, coll["contributionCalendar"]["totalContributions"], th))
         for i, project in enumerate(cfg["projects"]):
-            write(f"project-{project['repo']}-{name}.svg", project_card(project, data.get(f"p{i}"), th))
+            write(f"project-{project['repo']}-{name}.svg",
+                  project_card(project, data.get(f"p{i}"), th, cfg["user"], images.get(project["repo"])))
 
 
 if __name__ == "__main__":
