@@ -29,6 +29,9 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Instalar fonttools
+        run: pip install fonttools==4.63.0
+
       - name: Generar SVGs
         run: python scripts/generate.py
         env:

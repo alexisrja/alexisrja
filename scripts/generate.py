@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import base64
 import datetime as dt
+import io
 import json
 import math
 import os
@@ -547,6 +548,169 @@ def project_card(project: dict, repo: dict | None, th: dict, user: str, image: s
     return svg(W, H, project["title"], "".join(out), css="")
 
 
+# ------------------------------------------------------ fuentes retro ---
+# Un <img> con SVG no puede cargar fuentes externas, así que se incrustan
+# recortadas a los caracteres que usa cada imagen (requiere fonttools).
+
+FONTS = ROOT / "scripts" / "fonts"
+VT, VT_FILE = "VT323", "VT323-Regular.ttf"
+PIXEL, PIXEL_FILE = "PressStart2P", "PressStart2P-Regular.ttf"
+PLATFORMS = {"spotify": ("SPOTIFY", "#1db954"), "youtube": ("YOUTUBE", "#ff0033")}
+
+RETRO_CSS = (
+    ".bar{transform:scaleX(0);animation:bar 1.2s cubic-bezier(.2,.8,.2,1) forwards}"
+    "@keyframes bar{to{transform:scaleX(1)}}"
+    ".bl{animation:bl 1s steps(1) infinite}@keyframes bl{50%{opacity:0}}"
+    ".spin{animation:spin 3s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}"
+    ".eq{animation:eq .9s ease-in-out infinite alternate}"
+    "@keyframes eq{from{transform:scaleY(.2)}to{transform:scaleY(1)}}"
+    "@media (prefers-reduced-motion:reduce){.bar{animation:none;transform:none}.bl,.spin,.eq{animation:none}}"
+)
+
+
+def font_face(family: str, file: str, text: str) -> str:
+    from fontTools import subset
+    from fontTools.ttLib import TTFont
+
+    font = TTFont(FONTS / file, recalcTimestamp=False)  # sin timestamp: el SVG no cambia entre corridas
+    subsetter = subset.Subsetter(subset.Options())
+    subsetter.populate(text=text + " ")
+    subsetter.subset(font)
+    buf = io.BytesIO()
+    font.save(buf)
+    data = base64.b64encode(buf.getvalue()).decode()
+    return f"@font-face{{font-family:'{family}';src:url(data:font/ttf;base64,{data}) format('truetype')}}"
+
+
+def font_advance(file: str) -> float:
+    """Ancho de un carácter como fracción del tamaño de fuente (las dos fuentes son monoespaciadas)."""
+    from fontTools.ttLib import TTFont
+
+    font = TTFont(FONTS / file, lazy=True)
+    return font["hmtx"]["a"][0] / font["head"].unitsPerEm
+
+
+def whoami_card(cfg: dict, th: dict) -> str:
+    w = cfg["whoami"]
+    W, pad, fs, lh = 880, 32, 24, 27
+    adv = font_advance(VT_FILE)
+    cols = int(540 / (adv * fs))
+    vt = f"font-family=\"'{VT}',monospace\""
+    px = f"font-family=\"'{PIXEL}',monospace\""
+    vt_text, px_text = [], []
+    out = [card(W, 0, th)]  # la altura se ajusta al final
+
+    y = 48
+    out.append(f'<text x="{pad}" y="{y}" {px} font-size="12" fill="{th["accent"]}">PLAYER 1</text>'
+               f'<text class="bl" x="{W - pad}" y="{y}" text-anchor="end" {px} font-size="10" '
+               f'fill="{th["accent"]}">ONLINE</text>'
+               f'<path d="M{pad} {y + 16.5}H{W - pad}" stroke="{th["border"]}" stroke-dasharray="4 4"/>')
+    px_text += ["PLAYER 1", "ONLINE"]
+
+    # El texto va sin animación de entrada: es el contenido principal y debe verse siempre.
+    y += 56
+    for line in wrap(w["intro"], cols, 99):
+        out.append(f'<text x="{pad}" y="{y}" {vt} font-size="{fs}" fill="{th["text"]}">{t(line)}</text>')
+        vt_text.append(line)
+        y += lh
+    y += 14
+    for label, text in w["items"]:
+        for i, line in enumerate(wrap(f"{label}: {text}", cols - 2, 99)):
+            if i == 0:
+                content = (f'<tspan fill="{th["accent"]}">&gt; </tspan><tspan fill="{th["accent2"]}">{t(label)}:</tspan>'
+                           f'<tspan fill="{th["text"]}">{t(line[len(label) + 1:])}</tspan>')
+                x = pad
+            else:
+                content, x = t(line), pad + 2 * adv * fs
+            out.append(f'<text x="{x:g}" y="{y}" {vt} font-size="{fs}" fill="{th["text"]}" '
+                       f'xml:space="preserve">{content}</text>')
+            vt_text.append("> " + line)
+            y += lh
+        y += 6
+    left_end = y
+
+    # Ficha de personaje a la derecha.
+    bx, by = 600, 96
+    bw = W - pad - bx
+    vfs = 22
+    vcols = int((bw - 36) / (adv * vfs))
+    box = []
+    yy = by + 30
+    box.append(f'<text x="{bx + 18}" y="{yy}" {px} font-size="10" fill="{th["accent"]}">FICHA</text>')
+    px_text.append("FICHA")
+    yy += 28
+    for label, value in w.get("sheet", []):
+        box.append(f'<text x="{bx + 18}" y="{yy}" {px} font-size="8" fill="{th["muted"]}">{t(label)}</text>')
+        px_text.append(label)
+        for i, line in enumerate(wrap(value, vcols, 2)):
+            box.append(f'<text x="{bx + 18}" y="{yy + 22 + i * 20}" {vt} font-size="{vfs}" '
+                       f'fill="{th["text"]}">{t(line)}</text>')
+            vt_text.append(line)
+            yy += 20
+        yy += 30
+    bar_w = bw - 36
+    for i, (label, value) in enumerate(w.get("bars", [])):
+        box.append(f'<text x="{bx + 18}" y="{yy}" {px} font-size="8" fill="{th["muted"]}">{t(label)}</text>'
+                   f'<text x="{bx + bw - 18}" y="{yy}" text-anchor="end" {px} font-size="8" '
+                   f'fill="{th["muted"]}">{round(value * 100)}%</text>'
+                   f'<rect x="{bx + 18}" y="{yy + 8}" width="{bar_w}" height="10" fill="{th["grid"]}"/>'
+                   f'<rect class="bar" style="transform-origin:{bx + 18}px 0;animation-delay:{.4 + i * .15:.2f}s" '
+                   f'x="{bx + 18}" y="{yy + 8}" width="{bar_w * value:.1f}" height="10" fill="{th["accent"]}"/>'
+                   f'<path d="{"".join(f"M{bx + 18 + s}.5 {yy + 8}v10" for s in range(8, bar_w, 8))}" '
+                   f'stroke="{th["bg"]}" stroke-width="2"/>')
+        px_text.append(f"{label}{round(value * 100)}%")
+        yy += 38
+    box_h = yy - by
+    out.append(f'<rect x="{bx + .5}" y="{by + .5}" width="{bw - 1}" height="{box_h}" rx="6" '
+               f'fill="{th["panel"]}" stroke="{th["border"]}"/>')
+    out.extend(box)
+
+    H = max(left_end, by + box_h) + 24
+    out[0] = card(W, H, th)
+    css = (font_face(VT, VT_FILE, "".join(vt_text)) + font_face(PIXEL, PIXEL_FILE, "".join(px_text))
+           + ANIM_CSS + RETRO_CSS)
+    return svg(W, H, " ".join([w["intro"]] + [f"{a}: {b}" for a, b in w["items"]]), "".join(out), css=css)
+
+
+def playlist_card(pl: dict, th: dict) -> str:
+    W, H = 420, 150
+    name, color = PLATFORMS.get(pl["platform"], (pl["platform"].upper(), th["accent"]))
+    vt = f"font-family=\"'{VT}',monospace\""
+    px = f"font-family=\"'{PIXEL}',monospace\""
+    cx, cy, r = 78, 75, 50
+    out = [card(W, H, th)]
+
+    def polar(angle: float, radius: float) -> str:
+        rad = math.radians(angle)
+        return f"{cx + math.cos(rad) * radius:.1f} {cy + math.sin(rad) * radius:.1f}"
+
+    grooves = "".join(f'<circle cx="{cx}" cy="{cy}" r="{g}" fill="none" stroke="#2b2b2b"/>' for g in (44, 37, 30, 24))
+    out.append(f'<g class="spin" style="transform-origin:{cx}px {cy}px">'
+               f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="#0b0b0b"/>{grooves}'
+               f'<path d="M{cx} {cy}L{polar(-115, r)}A{r} {r} 0 0 1 {polar(-75, r)}Z" fill="#fff" fill-opacity=".1"/>'
+               f'<circle cx="{cx}" cy="{cy}" r="17" fill="{color}"/>'
+               f'<circle cx="{cx}" cy="{cy}" r="3" fill="{th["bg"]}"/></g>')
+
+    tx = 150
+    title = pl["title"] if len(pl["title"]) <= 22 else pl["title"][:21] + "…"
+    subtitle = f"{name} · {pl['kind']}"
+    out.append(f'<rect class="bl" x="{tx}" y="31" width="6" height="6" fill="{color}"/>'
+               f'<text x="{tx + 14}" y="38" {px} font-size="8" fill="{th["muted"]}">NOW PLAYING</text>'
+               f'<text x="{tx}" y="74" {vt} font-size="30" fill="{th["text"]}">{t(title)}</text>'
+               f'<text x="{tx}" y="98" {vt} font-size="21" fill="{th["muted"]}">{t(subtitle)}</text>'
+               f'<rect x="{tx + .5}" y="110.5" width="80" height="22" rx="3" fill="none" stroke="{color}"/>'
+               f'<text x="{tx + 40.5}" y="126" text-anchor="middle" {px} font-size="9" fill="{color}">PLAY</text>')
+    base = 132
+    for i, (dur, delay) in enumerate(((.8, .1), (.55, .4), (.95, .2), (.65, .6), (.75, .3), (.5, .5), (.9, .0))):
+        x = 312 + i * 12
+        out.append(f'<rect class="eq" style="transform-origin:{x}px {base}px;animation-duration:{dur}s;'
+                   f'animation-delay:-{delay}s" x="{x}" y="{base - 40}" width="7" height="40" fill="{color}" '
+                   f'fill-opacity=".85"/>')
+    css = (font_face(VT, VT_FILE, title + subtitle) + font_face(PIXEL, PIXEL_FILE, "NOW PLAYING PLAY")
+           + RETRO_CSS)
+    return svg(W, H, f"{pl['title']} en {name}", "".join(out), css=css)
+
+
 # ----------------------------------------------------------------- main ---
 
 def write(name: str, content: str) -> None:
@@ -585,6 +749,10 @@ def main() -> None:
         write(f"card-langs-{name}.svg", languages_card(mix, th))
         write(f"card-stats-{name}.svg", stats_card(stats, th))
         write(f"heatmap-{name}.svg", heatmap(weeks, coll["contributionCalendar"]["totalContributions"], th))
+        if cfg.get("whoami"):
+            write(f"whoami-{name}.svg", whoami_card(cfg, th))
+        for i, pl in enumerate(cfg.get("playlists", [])):
+            write(f"playlist-{i}-{name}.svg", playlist_card(pl, th))
         for i, project in enumerate(cfg["projects"]):
             write(f"project-{project['repo']}-{name}.svg",
                   project_card(project, data.get(f"p{i}"), th, cfg["user"], images.get(project["repo"])))

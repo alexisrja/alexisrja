@@ -10,7 +10,7 @@
 <br>
 
 <a href="https://github.com/alexisrja">
-  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=22&duration=2600&pause=900&color=3FB950&center=true&vCenter=true&width=820&lines=Alexis+Ram%C3%ADrez+-+Desarrollador+Web;Next.js+%2F+TypeScript+%2F+Node.js+%2F+Python;Software+para+negocios+locales+y+educaci%C3%B3n" alt="typing banner">
+  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=22&duration=2600&pause=900&color=3FB950&center=true&vCenter=true&width=820&lines=Ing.+Alexis+Ram%C3%ADrez+-+Desarrollador+Web;Next.js+%2F+TypeScript+%2F+Node.js+%2F+Python;Software+para+negocios+locales+y+educaci%C3%B3n" alt="typing banner">
 </a>
 
 <br>
@@ -32,15 +32,12 @@
 
 ## `$ whoami`
 
-Hola, soy **Alexis**, estudiante de **Ingeniería en Sistemas Computacionales** en la
-Universidad Mexiquense del Bicentenario 🇲🇽. Llevo más de 4 años en la informática y 2
-construyendo software que resuelve problemas reales de gente real.
-
-- 🛠️ **Hago web apps para negocios locales:** catálogos, inventarios, puntos de venta y sistemas de gestión.
-- 🎓 **Me mueve la tecnología educativa:** plataformas gamificadas y apps que funcionan incluso sin internet.
-- 🤖 **Aprendiendo ahora:** visión artificial con Python (OpenCV, MediaPipe) y más a fondo Next.js + TypeScript.
-- 🤝 Mucho de lo que sé se lo debo a mi familia, amigos y colegas. Por eso me gusta compartir lo que aprendo.
-- 💬 Háblame de **proyectos para negocios, edtech o una idea que quieras sacar adelante**.
+<!-- Texto en assets/profile.json → "whoami". Se dibuja con fuente retro incrustada. -->
+<picture>
+  <source media="(prefers-color-scheme: dark)"  srcset="assets/whoami-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/whoami-light.svg">
+  <img src="assets/whoami-dark.svg" width="100%" alt="Hola, soy Alexis, Ingeniero en Sistemas Computacionales por la Universidad Mexiquense del Bicentenario. Hago web apps para negocios locales, me mueve la tecnología educativa y estoy aprendiendo visión artificial con Python y Next.js + TypeScript.">
+</picture>
 
 ---
 
@@ -120,6 +117,31 @@ construyendo software que resuelve problemas reales de gente real.
 ## `$ cat stack.txt`
 
 <img src="https://skillicons.dev/icons?i=ts,js,nextjs,react,tailwind,nodejs,express,python,flask,opencv,mongodb,mysql,git,vercel&perline=7" alt="stack">
+
+</div>
+
+---
+
+<div align="center">
+
+## `$ mpv ~/musica/coding.m3u`
+
+<a href="https://open.spotify.com/playlist/37i9dQZF1DX5trt9i14X7j">
+<picture>
+  <source media="(prefers-color-scheme: dark)"  srcset="assets/playlist-0-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/playlist-0-light.svg">
+  <img src="assets/playlist-0-dark.svg" width="400" alt="Coding Mode en Spotify">
+</picture>
+</a>
+<a href="https://www.youtube.com/watch?v=jfKfPfyJRdk">
+<picture>
+  <source media="(prefers-color-scheme: dark)"  srcset="assets/playlist-1-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/playlist-1-light.svg">
+  <img src="assets/playlist-1-dark.svg" width="400" alt="lofi hip hop radio en YouTube">
+</picture>
+</a>
+
+<sub>lo que suena mientras programo</sub>
 
 </div>
 

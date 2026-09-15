@@ -6,7 +6,7 @@
     "command": "./profile.sh --live",
     "lines": [
       ["nombre", "Alexis Ramírez Jiménez"],
-      ["estudio", "Ing. Sistemas Computacionales · UMB"],
+      ["título", "Ingeniero en Sistemas Computacionales"],
       ["construyo", "web apps para negocios y educación"],
       ["stack", "Next.js · TypeScript · Node.js · Python"],
       ["estado", "● abierto a proyectos y colaboraciones"]
@@ -20,6 +20,27 @@
     { "name": "Python/IA", "value": 5 },
     { "name": "Móvil", "value": 4 },
     { "name": "Deploy", "value": 7 }
+  ],
+  "whoami": {
+    "intro": "Hola, soy Alexis, Ingeniero en Sistemas Computacionales por la Universidad Mexiquense del Bicentenario. Llevo más de 4 años en la informática y 2 construyendo software que resuelve problemas reales de gente real.",
+    "items": [
+      ["negocios", "hago web apps para negocios locales: catálogos, inventarios, puntos de venta y sistemas de gestión."],
+      ["edtech", "me mueve la tecnología educativa: plataformas gamificadas y apps que funcionan sin internet."],
+      ["aprendiendo", "visión artificial con Python (OpenCV, MediaPipe) y más a fondo Next.js + TypeScript."],
+      ["comunidad", "mucho de lo que sé se lo debo a mi familia, amigos y colegas; por eso comparto lo que aprendo."],
+      ["hablemos", "proyectos para negocios, edtech o esa idea que quieres sacar adelante."]
+    ],
+    "sheet": [
+      ["CLASE", "Ingeniero en Sistemas"],
+      ["BASE", "Estado de México"],
+      ["XP", "4+ años en informática"],
+      ["ESPECIAL", "web apps que resuelven"]
+    ],
+    "bars": [["CAFÉ", 0.85], ["CÓDIGO", 0.95], ["SUEÑO", 0.3]]
+  },
+  "playlists": [
+    { "title": "Coding Mode", "platform": "spotify", "kind": "playlist", "url": "https://open.spotify.com/playlist/37i9dQZF1DX5trt9i14X7j" },
+    { "title": "lofi hip hop radio", "platform": "youtube", "kind": "en vivo", "url": "https://www.youtube.com/watch?v=jfKfPfyJRdk" }
   ],
   "include_private_languages": false,
   "ignore_languages": [],
