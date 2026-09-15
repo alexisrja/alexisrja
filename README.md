@@ -1,37 +1,178 @@
-<!-- Banner --> <p align="center"> <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0f2027,50:203a43,100:2c5364&height=180&section=header&text=Alexis%20Ram%C3%ADrez&fontSize=46&fontColor=ffffff&fontAlignY=38&desc=Ingenier%C3%ADa%20en%20Sistemas%20Computacionales%20%C2%B7%20Desarrollador%20Web&descAlignY=60&descSize=16" alt="Alexis Ramírez" width="100%"> </p> <p align="center"> <a href="https://github.com/alexisrja"> <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&pause=1200&color=58A6FF&center=true&vCenter=true&width=520&lines=Construyo+sitios+y+apps+que+resuelven+problemas+reales;Next.js+%C2%B7+TypeScript+%C2%B7+Node.js+%C2%B7+Python;Siempre+aprendiendo%2C+siempre+compartiendo" alt="Typing SVG"> </a> </p> <p align="center"> <img src="https://komarev.com/ghpvc/?username=alexisrja&label=Visitas&color=58a6ff&style=flat" alt="Visitas"> <img src="https://img.shields.io/github/followers/alexisrja?label=Seguidores&style=flat&color=58a6ff" alt="Seguidores"> </p>
-👨‍💻 Sobre mí
-Estudiante de Ingeniería en Sistemas Computacionales en la Universidad Mexiquense del Bicentenario, con más de 4 años en informática y 2 desarrollando software.
+<div align="center">
 
-🔭 Construyo sitios y aplicaciones web para negocios locales: catálogos, inventarios, puntos de venta y sistemas de gestión.
-🎓 Me interesa la tecnología educativa: plataformas gamificadas y apps que funcionan sin internet.
-🌱 Ahora mismo aprendo visión artificial con Python y sigo profundizando en Next.js + TypeScript.
-🤝 Mucho de lo que sé se lo debo a mi familia, amigos y colegas. Por eso me gusta compartir lo que aprendo.
-📍 México
-🚀 Proyectos destacados
-<table> <tr> <td width="50%" valign="top"> <h3>🎪 <a href="https://github.com/alexisrja/carpa-de-saberes">Carpa de Saberes</a></h3> <p>Escuela digital para niños del circo (4 a 11 años): 6 materias, 36 lecciones y 216 ejercicios que se califican solos. Funciona <b>sin internet</b> y guarda el avance en el dispositivo.</p> <p> <img src="https://img.shields.io/badge/HTML-E34F26?style=flat-square&logo=html5&logoColor=white"> <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black"> <img src="https://img.shields.io/badge/Offline--first-2ea44f?style=flat-square"> </p> <a href="https://carpa-de-saberes.vercel.app">🔗 Ver demo</a> </td> <td width="50%" valign="top"> <h3>🎮 <a href="https://github.com/alexisrja/EduClick">VisionArti (EduClick)</a></h3> <p>Plataforma de aprendizaje <b>gamificado con IA</b> para secundaria, con contenido y ejercicios en siete materias: matemáticas, física, biología, química y más.</p> <p> <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black"> <img src="https://img.shields.io/badge/IA-8A2BE2?style=flat-square"> </p> <a href="https://github.com/alexisrja/EduClick">📂 Ver código</a> </td> </tr> <tr> <td width="50%" valign="top"> <h3>💸 <a href="https://github.com/alexisrja/RemitPay">RemitPay</a></h3> <p>App web para <b>envío de remesas internacionales</b> basada en el protocolo Interledger: transferencias multi-moneda entre wallets compatibles.</p> <p> <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black"> <img src="https://img.shields.io/badge/Interledger-000000?style=flat-square"> </p> <a href="https://github.com/alexisrja/RemitPay">📂 Ver código</a> </td> <td width="50%" valign="top"> <h3>💬 <a href="https://github.com/alexisrja/wepsa">Chat en tiempo real</a></h3> <p>Chat con <b>Socket.IO</b>, autenticación JWT, historial en MongoDB, usuarios en línea e indicador de "escribiendo…".</p> <p> <img src="https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=nodedotjs&logoColor=white"> <img src="https://img.shields.io/badge/Socket.IO-010101?style=flat-square&logo=socketdotio&logoColor=white"> <img src="https://img.shields.io/badge/MongoDB-47A248?style=flat-square&logo=mongodb&logoColor=white"> </p> <a href="https://wepsa.vercel.app">🔗 Ver demo</a> </td> </tr> <tr> <td width="50%" valign="top"> <h3>🌸 <a href="https://github.com/alexisrja/plamari">Plamari</a></h3> <p>Folleto web para una distribuidora de claveles: catálogo, precios de mayoreo y menudeo, preguntas frecuentes y <b>cotización directa por WhatsApp</b>.</p> <p> <img src="https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=nextdotjs&logoColor=white"> <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white"> <img src="https://img.shields.io/badge/Tailwind-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white"> </p> <a href="https://plamari.vercel.app">🔗 Ver demo</a> </td> <td width="50%" valign="top"> <h3>📡 <a href="https://github.com/alexisrja/gestor">SISGINET</a></h3> <p>Sistema para proveedores de internet: gestión de clientes y servicios, dashboard con estadísticas y control de ingresos mensuales.</p> <p> <img src="https://img.shields.io/badge/Flask-000000?style=flat-square&logo=flask&logoColor=white"> <img src="https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white"> </p> <a href="https://github.com/alexisrja/gestor">📂 Ver código</a> </td> </tr> </table> <details> <summary><b>Más proyectos</b></summary> <br>
-Proyecto	Descripción	Links
-Rifas JAPS	Sitio de rifas con compra de boletos en línea	código · demo
-InvAccy	Inventario de rosas para una productora floral	código · demo
-Reconocimiento de emociones	Visión artificial con OpenCV, DeepFace y MediaPipe	código
-Punto de venta	Sistema de punto de venta en Python	código
-</details>
-🛠️ Tecnologías
-Lenguajes
+<!-- BANNER: terminal animada. Se genera con scripts/generate.py a partir de assets/profile.json. -->
+<picture>
+  <source media="(prefers-color-scheme: dark)"  srcset="assets/banner-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/banner-light.svg">
+  <img src="assets/banner-dark.svg" width="100%" alt="alexis@umb: ./profile.sh --live">
+</picture>
 
-<p> <img src="https://skillicons.dev/icons?i=ts,js,py,java,dart,html,css&theme=dark" alt="Lenguajes"> </p>
-Frontend y backend
+<br>
 
-<p> <img src="https://skillicons.dev/icons?i=nextjs,react,astro,tailwind,nodejs,express,flask,opencv&theme=dark" alt="Frameworks"> </p>
-Bases de datos
+<a href="https://github.com/alexisrja">
+  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=22&duration=2600&pause=900&color=3FB950&center=true&vCenter=true&width=820&lines=Alexis+Ram%C3%ADrez+-+Desarrollador+Web;Next.js+%2F+TypeScript+%2F+Node.js+%2F+Python;Software+para+negocios+locales+y+educaci%C3%B3n" alt="typing banner">
+</a>
 
-<p> <img src="https://skillicons.dev/icons?i=mongodb,mysql,sqlite&theme=dark" alt="Bases de datos"> </p>
-Herramientas
+<br>
 
-<p> <img src="https://skillicons.dev/icons?i=git,github,vercel,vscode,visualstudio,androidstudio,linux,ubuntu,windows&theme=dark" alt="Herramientas"> </p>
-📊 Actividad
-<p align="center"> <img src="https://streak-stats.demolab.com?user=alexisrja&theme=github-dark-blue&hide_border=true&locale=es" alt="Racha de contribuciones"> </p>
+<a href="https://alexisrja.github.io"><img src="https://img.shields.io/badge/Portafolio-0d1117?style=for-the-badge&logo=githubpages&logoColor=3fb950" alt="Portafolio"></a>&nbsp;&nbsp;
+<!-- Descomenta y pon tus datos:
+<a href="https://www.linkedin.com/in/TU_PERFIL"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"></a>&nbsp;&nbsp;
+<a href="mailto:TU_CORREO"><img src="https://img.shields.io/badge/Email-0d1117?style=for-the-badge&logo=gmail&logoColor=3fb950" alt="Email"></a>&nbsp;&nbsp;
+-->
+<a href="https://github.com/alexisrja?tab=repositories"><img src="https://img.shields.io/badge/Repositorios-0d1117?style=for-the-badge&logo=github&logoColor=3fb950" alt="Repositorios"></a>
 
-<a href="https://git.io/streak-stats"><img src="https://github-readme-streak-stats.herokuapp.com?user=alexisrja&theme=monokai&locale=es&short_numbers=true&date_format=j%20M%5B%20Y%5D" alt="GitHub Streak" /></a>
+<br>
 
-📫 Contacto
-<p align="center"> <!-- Reemplaza TU_CORREO y TU_PERFIL con tus datos reales, o borra el badge que no uses --> <a href="mailto:TU_CORREO"> <img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email"> </a> <a href="https://www.linkedin.com/in/TU_PERFIL"> <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"> </a> <a href="https://github.com/alexisrja"> <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"> </a> </p> <p align="center"> <img src="https://capsule-render.vercel.app/api?type=waving&color=0:2c5364,50:203a43,100:0f2027&height=100&section=footer" width="100%"> </p>
+<img src="https://komarev.com/ghpvc/?username=alexisrja&style=flat&color=3fb950&label=visitas" alt="visitas">
+
+</div>
+
+---
+
+## `$ whoami`
+
+Hola, soy **Alexis**, estudiante de **Ingeniería en Sistemas Computacionales** en la
+Universidad Mexiquense del Bicentenario 🇲🇽. Llevo más de 4 años en la informática y 2
+construyendo software que resuelve problemas reales de gente real.
+
+- 🛠️ **Hago web apps para negocios locales:** catálogos, inventarios, puntos de venta y sistemas de gestión.
+- 🎓 **Me mueve la tecnología educativa:** plataformas gamificadas y apps que funcionan incluso sin internet.
+- 🤖 **Aprendiendo ahora:** visión artificial con Python (OpenCV, MediaPipe) y más a fondo Next.js + TypeScript.
+- 🤝 Mucho de lo que sé se lo debo a mi familia, amigos y colegas. Por eso me gusta compartir lo que aprendo.
+- 💬 Háblame de **proyectos para negocios, edtech o una idea que quieras sacar adelante**.
+
+---
+
+<div align="center">
+
+## `$ ls ~/proyectos`
+
+<table>
+<tr>
+<td>
+<a href="https://github.com/alexisrja/carpa-de-saberes">
+<picture>
+  <source media="(prefers-color-scheme: dark)"  srcset="assets/project-carpa-de-saberes-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/project-carpa-de-saberes-light.svg">
+  <img src="assets/project-carpa-de-saberes-dark.svg" width="400" alt="Carpa de Saberes">
+</picture>
+</a>
+</td>
+<td>
+<a href="https://github.com/alexisrja/EduClick">
+<picture>
+  <source media="(prefers-color-scheme: dark)"  srcset="assets/project-EduClick-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/project-EduClick-light.svg">
+  <img src="assets/project-EduClick-dark.svg" width="400" alt="VisionArti">
+</picture>
+</a>
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/alexisrja/RemitPay">
+<picture>
+  <source media="(prefers-color-scheme: dark)"  srcset="assets/project-RemitPay-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/project-RemitPay-light.svg">
+  <img src="assets/project-RemitPay-dark.svg" width="400" alt="RemitPay">
+</picture>
+</a>
+</td>
+<td>
+<a href="https://github.com/alexisrja/wepsa">
+<picture>
+  <source media="(prefers-color-scheme: dark)"  srcset="assets/project-wepsa-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/project-wepsa-light.svg">
+  <img src="assets/project-wepsa-dark.svg" width="400" alt="Chat en tiempo real">
+</picture>
+</a>
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/alexisrja/plamari">
+<picture>
+  <source media="(prefers-color-scheme: dark)"  srcset="assets/project-plamari-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/project-plamari-light.svg">
+  <img src="assets/project-plamari-dark.svg" width="400" alt="Plamari">
+</picture>
+</a>
+</td>
+<td>
+<a href="https://github.com/alexisrja/gestor">
+<picture>
+  <source media="(prefers-color-scheme: dark)"  srcset="assets/project-gestor-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/project-gestor-light.svg">
+  <img src="assets/project-gestor-dark.svg" width="400" alt="SISGINET">
+</picture>
+</a>
+</td>
+</tr>
+</table>
+
+</div>
+
+---
+
+<div align="center">
+
+## `$ cat stack.txt`
+
+<img src="https://skillicons.dev/icons?i=ts,js,nextjs,react,tailwind,nodejs,express,python,flask,opencv,mongodb,mysql,git,vercel&perline=7" alt="stack">
+
+</div>
+
+---
+
+<div align="center">
+
+## `$ ./señales`
+
+<table>
+<tr>
+<td width="50%" align="center" valign="middle">
+
+<!-- Autoevaluación: edita "skills" en assets/profile.json y el workflow la redibuja -->
+<picture>
+  <source media="(prefers-color-scheme: dark)"  srcset="assets/radar-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/radar-light.svg">
+  <img src="assets/radar-dark.svg" width="400" alt="radar de habilidades">
+</picture>
+
+</td>
+<td width="50%" align="center" valign="middle">
+
+<picture>
+  <source media="(prefers-color-scheme: dark)"  srcset="assets/card-langs-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/card-langs-light.svg">
+  <img src="assets/card-langs-dark.svg" width="400" alt="lenguajes más usados">
+</picture>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)"  srcset="assets/card-stats-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/card-stats-light.svg">
+  <img src="assets/card-stats-dark.svg" width="400" alt="estadísticas de GitHub">
+</picture>
+
+</td>
+</tr>
+</table>
+
+<!-- Generado en este repo por scripts/generate.py (workflow cada 12 h). A propósito NO usa
+     github-readme-stats / streak-stats: son instancias públicas que se caen seguido. -->
+<picture>
+  <source media="(prefers-color-scheme: dark)"  srcset="assets/heatmap-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/heatmap-light.svg">
+  <img src="assets/heatmap-dark.svg" width="100%" alt="gráfica de contribuciones">
+</picture>
+
+</div>
+
+---
+
+<div align="center">
+
+<sub>`hecho con café y código · Estado de México`</sub>
+
+</div>
