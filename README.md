@@ -137,7 +137,7 @@
 <picture>
   <source media="(prefers-color-scheme: dark)"  srcset="assets/playlist-1-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="assets/playlist-1-light.svg">
-  <img src="assets/playlist-1-dark.svg" width="400" alt="lofi hip hop radio en YouTube">
+  <img src="assets/playlist-1-dark.svg" width="400" alt="Knight's Last Watch de Lostvibe en YouTube">
 </picture>
 </a>
 

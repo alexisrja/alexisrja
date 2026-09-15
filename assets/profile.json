@@ -40,7 +40,7 @@
   },
   "playlists": [
     { "title": "Coding Mode", "platform": "spotify", "kind": "playlist", "url": "https://open.spotify.com/playlist/37i9dQZF1DX5trt9i14X7j" },
-    { "title": "lofi hip hop radio", "platform": "youtube", "kind": "en vivo", "url": "https://www.youtube.com/watch?v=jfKfPfyJRdk" }
+    { "title": "Knight's Last Watch", "platform": "youtube", "kind": "Lostvibe", "url": "https://www.youtube.com/watch?v=NYzWdziId60&list=RDNYzWdziId60&start_radio=1" }
   ],
   "include_private_languages": false,
   "ignore_languages": [],
