@@ -1,0 +1,58 @@
+{
+  "user": "alexisrja",
+  "initials": "AR",
+  "banner": {
+    "host": "alexis@umb",
+    "command": "./profile.sh --live",
+    "lines": [
+      ["nombre", "Alexis Ramírez Jiménez"],
+      ["estudio", "Ing. Sistemas Computacionales · UMB"],
+      ["construyo", "web apps para negocios y educación"],
+      ["stack", "Next.js · TypeScript · Node.js · Python"],
+      ["estado", "● abierto a proyectos y colaboraciones"]
+    ]
+  },
+  "skills": [
+    { "name": "Frontend", "value": 8 },
+    { "name": "Backend", "value": 7 },
+    { "name": "Datos", "value": 6 },
+    { "name": "UI/UX", "value": 7 },
+    { "name": "Python/IA", "value": 5 },
+    { "name": "Móvil", "value": 4 },
+    { "name": "Deploy", "value": 7 }
+  ],
+  "include_private_languages": false,
+  "ignore_languages": [],
+  "projects": [
+    {
+      "repo": "carpa-de-saberes",
+      "title": "carpa-de-saberes",
+      "description": "Escuela digital para niños del circo: 6 materias y 216 ejercicios que funcionan sin internet."
+    },
+    {
+      "repo": "EduClick",
+      "title": "VisionArti",
+      "description": "Plataforma de aprendizaje gamificado con IA para secundaria, con ejercicios en siete materias."
+    },
+    {
+      "repo": "RemitPay",
+      "title": "RemitPay",
+      "description": "Remesas internacionales sobre Interledger: envíos multi-moneda entre wallets compatibles."
+    },
+    {
+      "repo": "wepsa",
+      "title": "chat-tiempo-real",
+      "description": "Chat con Socket.IO, login con JWT, historial en MongoDB y contador de usuarios en línea."
+    },
+    {
+      "repo": "plamari",
+      "title": "plamari",
+      "description": "Folleto web para una distribuidora de claveles, con catálogo y cotización por WhatsApp."
+    },
+    {
+      "repo": "gestor",
+      "title": "SISGINET",
+      "description": "Gestión de clientes y servicios para un proveedor de internet, con dashboard e ingresos."
+    }
+  ]
+}

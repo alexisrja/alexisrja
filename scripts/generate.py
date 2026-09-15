@@ -1,0 +1,465 @@
+#!/usr/bin/env python3
+"""Genera las imágenes SVG del perfil: banner, radar, tarjetas y heatmap.
+
+Solo usa la biblioteca estándar de Python. Los datos salen de la API GraphQL
+de GitHub con GH_TOKEN / GITHUB_TOKEN, o con `gh auth token` si lo corres en
+tu computadora:
+
+    python scripts/generate.py
+
+Lo que se puede personalizar (banner, habilidades, proyectos) vive en
+assets/profile.json. Cada imagen se genera en versión clara y oscura.
+"""
+from __future__ import annotations
+
+import datetime as dt
+import json
+import math
+import os
+import subprocess
+import sys
+import urllib.request
+from pathlib import Path
+from xml.sax.saxutils import escape
+
+ROOT = Path(__file__).resolve().parent.parent
+ASSETS = ROOT / "assets"
+
+THEMES = {
+    "dark": {
+        "bg": "#0d1117", "panel": "#161b22", "border": "#30363d", "grid": "#21262d",
+        "text": "#e6edf3", "muted": "#8b949e", "accent": "#3fb950", "accent2": "#58a6ff",
+        "levels": ["#21262d", "#0e4429", "#006d32", "#26a641", "#39d353"],
+    },
+    "light": {
+        "bg": "#ffffff", "panel": "#f6f8fa", "border": "#d0d7de", "grid": "#eaeef2",
+        "text": "#1f2328", "muted": "#656d76", "accent": "#1a7f37", "accent2": "#0969da",
+        "levels": ["#ebedf0", "#9be9a8", "#40c463", "#30a14e", "#216e39"],
+    },
+}
+MONO = "'JetBrains Mono','Fira Code','SF Mono',Menlo,Consolas,'DejaVu Sans Mono',monospace"
+SANS = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif"
+MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"]
+
+# Letras de 5x7 para el arte de iniciales del banner. Agrega las que necesites.
+GLYPHS = {
+    "A": [".###.", "#...#", "#...#", "#####", "#...#", "#...#", "#...#"],
+    "R": ["####.", "#...#", "#...#", "####.", "#.#..", "#..#.", "#...#"],
+}
+
+ANIM_CSS = (
+    ".fade{opacity:0;animation:fade .45s ease-out forwards}"
+    ".pop{opacity:0;animation:fade .3s ease-out forwards}"
+    ".type{animation:type var(--d) steps(var(--n)) forwards}"
+    ".blink{animation:blink 1.1s steps(1) infinite}"
+    ".grow{transform-origin:var(--o);animation:grow .9s cubic-bezier(.2,.8,.2,1) forwards;transform:scale(0)}"
+    "@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}"
+    "@keyframes type{to{transform:translateX(var(--w))}}"
+    "@keyframes blink{50%{fill-opacity:0}}"
+    "@keyframes grow{to{transform:scale(1)}}"
+    "@media (prefers-reduced-motion:reduce){.fade,.pop,.grow{animation:none;opacity:1;transform:none}"
+    ".type{display:none}.blink{animation:none}}"
+)
+
+
+# ---------------------------------------------------------------- datos ---
+
+def get_token() -> str:
+    for key in ("GH_TOKEN", "GITHUB_TOKEN"):
+        if os.environ.get(key):
+            return os.environ[key]
+    try:
+        out = subprocess.run(["gh", "auth", "token"], capture_output=True, text=True, check=True)
+        return out.stdout.strip()
+    except (OSError, subprocess.CalledProcessError):
+        sys.exit("Falta GH_TOKEN (o inicia sesión con `gh auth login`).")
+
+
+def graphql(query: str, token: str) -> dict:
+    req = urllib.request.Request(
+        "https://api.github.com/graphql",
+        data=json.dumps({"query": query}).encode(),
+        headers={"Authorization": f"bearer {token}", "Content-Type": "application/json",
+                 "User-Agent": "profile-generator"},
+    )
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        body = json.load(resp)
+    if body.get("errors"):
+        sys.exit(f"Error de GraphQL: {body['errors']}")
+    return body["data"]
+
+
+def fetch(cfg: dict, token: str) -> dict:
+    user = cfg["user"]
+    repo_fields = "name url homepageUrl stargazerCount primaryLanguage { name color }"
+    aliases = "\n".join(
+        f'p{i}: repository(owner: "{user}", name: "{p["repo"]}") {{ {repo_fields} }}'
+        for i, p in enumerate(cfg["projects"])
+    )
+    query = f"""{{
+      user(login: "{user}") {{
+        createdAt
+        contributionsCollection {{
+          totalCommitContributions
+          contributionCalendar {{
+            totalContributions
+            weeks {{ contributionDays {{ date contributionCount }} }}
+          }}
+        }}
+        repositories(ownerAffiliations: OWNER, isFork: false, first: 100) {{
+          totalCount
+          nodes {{
+            isPrivate
+            stargazerCount
+            languages(first: 10, orderBy: {{field: SIZE, direction: DESC}}) {{
+              edges {{ size node {{ name color }} }}
+            }}
+          }}
+        }}
+      }}
+      {aliases}
+    }}"""
+    return graphql(query, token)
+
+
+def streaks(counts: list[int]) -> tuple[int, int]:
+    longest = run = 0
+    for c in counts:
+        run = run + 1 if c else 0
+        longest = max(longest, run)
+    i = len(counts) - 1
+    if i >= 0 and counts[i] == 0:  # hoy todavía puede no tener actividad
+        i -= 1
+    current = 0
+    while i >= 0 and counts[i]:
+        current += 1
+        i -= 1
+    return current, longest
+
+
+def language_mix(repos: list[dict], include_private: bool, ignore: set[str]) -> list[tuple[str, float, str]]:
+    sizes: dict[str, int] = {}
+    colors: dict[str, str] = {}
+    for repo in repos:
+        if repo["isPrivate"] and not include_private:
+            continue
+        for edge in repo["languages"]["edges"]:
+            name = edge["node"]["name"]
+            if name in ignore:
+                continue
+            sizes[name] = sizes.get(name, 0) + edge["size"]
+            colors[name] = edge["node"]["color"] or "#8b949e"
+    total = sum(sizes.values()) or 1
+    ranked = sorted(sizes.items(), key=lambda kv: -kv[1])
+    mix = [(name, size * 100 / total, colors[name]) for name, size in ranked[:5]]
+    rest = sum(size for _, size in ranked[5:])
+    if rest:
+        mix.append(("Otros", rest * 100 / total, "#8b949e"))
+    return mix
+
+
+# ------------------------------------------------------------ utilerías ---
+
+def a(value) -> str:
+    return escape(str(value), {'"': "&quot;"})
+
+
+def t(value) -> str:
+    return escape(str(value))
+
+
+def svg(width: int, height: int, label: str, body: str, css: str = ANIM_CSS) -> str:
+    return (
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" '
+        f'viewBox="0 0 {width} {height}" role="img" aria-label="{a(label)}">'
+        f"<title>{t(label)}</title><style>{css}</style>{body}</svg>\n"
+    )
+
+
+def card(width: int, height: int, th: dict) -> str:
+    return (f'<rect x=".5" y=".5" width="{width - 1}" height="{height - 1}" rx="10" '
+            f'fill="{th["bg"]}" stroke="{th["border"]}"/>')
+
+
+def heading(x: int, y: int, cmd: str, th: dict) -> str:
+    return (f'<text x="{x}" y="{y}" font-family="{MONO}" font-size="14" font-weight="600">'
+            f'<tspan fill="{th["accent"]}">$</tspan> <tspan fill="{th["text"]}">{t(cmd)}</tspan></text>')
+
+
+def wrap(text: str, width: int, max_lines: int) -> list[str]:
+    lines, cur = [], ""
+    for word in text.split():
+        if cur and len(cur) + 1 + len(word) > width:
+            lines.append(cur)
+            cur = word
+        else:
+            cur = f"{cur} {word}".strip()
+    if cur:
+        lines.append(cur)
+    if len(lines) > max_lines:
+        lines = lines[:max_lines]
+        lines[-1] = lines[-1][: width - 1].rstrip() + "…"
+    return lines
+
+
+# -------------------------------------------------------------- dibujos ---
+
+def banner(cfg: dict, user: dict, th: dict) -> str:
+    W, H = 1200, 330
+    b = cfg["banner"]
+    host = b["host"]
+    fs, cw = 19, 19 * 0.62  # tamaño de fuente y ancho estimado de carácter
+    x0, y0, gap = 60, 106, 31
+    out = [f'<rect width="{W}" height="{H}" fill="{th["bg"]}"/>',
+           f'<rect x="20.5" y="16.5" width="1159" height="297" rx="12" fill="{th["panel"]}" stroke="{th["border"]}"/>',
+           f'<line x1="21" y1="52.5" x2="1179" y2="52.5" stroke="{th["border"]}"/>']
+    for i, color in enumerate(("#ff5f56", "#ffbd2e", "#27c93f")):
+        out.append(f'<circle cx="{46 + i * 22}" cy="34.5" r="6" fill="{color}"/>')
+    out.append(f'<text x="600" y="39" text-anchor="middle" font-family="{MONO}" font-size="13" '
+               f'fill="{th["muted"]}">{t(host)}: ~</text>')
+
+    def prompt_tspans() -> str:
+        return (f'<tspan fill="{th["accent"]}">{t(host)}</tspan><tspan fill="{th["muted"]}">:</tspan>'
+                f'<tspan fill="{th["accent2"]}">~</tspan><tspan fill="{th["muted"]}">$ </tspan>')
+
+    # Línea 1: el comando se "escribe" con una tapa que se desliza a la derecha.
+    cmd = b["command"]
+    cmd_x = x0 + (len(host) + 4) * cw
+    cmd_w = len(cmd) * cw + 8
+    type_start, type_dur = 0.7, len(cmd) * 0.055
+    out.append(f'<g class="pop" style="animation-delay:.2s"><text x="{x0}" y="{y0}" font-family="{MONO}" '
+               f'font-size="{fs}" xml:space="preserve">{prompt_tspans()}<tspan fill="{th["text"]}">{t(cmd)}</tspan></text></g>')
+    out.append(f'<rect class="type" x="{cmd_x - 2:.1f}" y="{y0 - fs}" width="{cmd_w:.1f}" height="{fs + 8}" '
+               f'fill="{th["panel"]}" style="--w:{cmd_w:.1f}px;--n:{len(cmd)};--d:{type_dur:.2f}s;'
+               f'animation-delay:{type_start}s"/>')
+
+    delay = type_start + type_dur + 0.3
+    y = y0
+    for key, value in b["lines"]:
+        y += gap
+        value_color = th["text"]
+        dot = ""
+        if value.startswith("●"):
+            dot = f'<tspan fill="{th["accent"]}">● </tspan>'
+            value = value[1:].strip()
+        out.append(
+            f'<g class="fade" style="animation-delay:{delay:.2f}s"><text y="{y}" font-family="{MONO}" font-size="{fs}">'
+            f'<tspan x="{x0}" fill="{th["muted"]}">›</tspan>'
+            f'<tspan x="{x0 + 2 * cw:.1f}" fill="{th["accent2"]}">{t(key)}</tspan>'
+            f'<tspan x="{x0 + 13 * cw:.1f}" fill="{value_color}">{dot}{t(value)}</tspan></text></g>')
+        delay += 0.18
+    y += gap
+    out.append(f'<g class="fade" style="animation-delay:{delay:.2f}s"><text x="{x0}" y="{y}" font-family="{MONO}" '
+               f'font-size="{fs}" xml:space="preserve">{prompt_tspans()}<tspan class="blink" '
+               f'fill="{th["accent"]}">▋</tspan></text></g>')
+
+    # Arte de iniciales estilo gráfica de contribuciones.
+    letters = [GLYPHS[ch] for ch in cfg.get("initials", "") if ch in GLYPHS]
+    if letters:
+        cell, pitch = 20, 25
+        cols = len(letters) * 6 - 1
+        ax = 1140 - cols * pitch + (pitch - cell)
+        ay = 74
+        for li, glyph in enumerate(letters):
+            for r, row in enumerate(glyph):
+                for c, on in enumerate(row):
+                    col = li * 6 + c
+                    px, py = ax + col * pitch, ay + r * pitch
+                    if on == "#":
+                        level = 2 + (r * 7 + col * 3) % 3
+                        d = 0.4 + col * 0.07 + r * 0.03
+                        out.append(f'<rect class="pop" style="animation-delay:{d:.2f}s" x="{px}" y="{py}" '
+                                   f'width="{cell}" height="{cell}" rx="4" fill="{th["levels"][level]}"/>')
+                    else:
+                        out.append(f'<rect x="{px}" y="{py}" width="{cell}" height="{cell}" rx="4" fill="{th["grid"]}"/>')
+        center = ax + (cols * pitch - (pitch - cell)) / 2
+        year = user["createdAt"][:4]
+        out.append(f'<text x="{center:.0f}" y="{ay + 7 * pitch + 22}" text-anchor="middle" font-family="{MONO}" '
+                   f'font-size="13" fill="{th["muted"]}">en GitHub desde {year}</text>')
+    return svg(W, H, f"{host} — {cmd}", "".join(out))
+
+
+def radar(cfg: dict, th: dict) -> str:
+    W, H = 420, 400
+    skills = cfg["skills"]
+    n = len(skills)
+    cx, cy, r = 210, 218, 110
+    out = [card(W, H, th), heading(24, 36, "./skills --autoevaluacion", th)]
+
+    def point(i: int, value: float) -> tuple[float, float]:
+        ang = -math.pi / 2 + i * 2 * math.pi / n
+        return cx + math.cos(ang) * r * value / 10, cy + math.sin(ang) * r * value / 10
+
+    for ring in (2, 4, 6, 8, 10):
+        pts = " ".join(f"{x:.1f},{y:.1f}" for x, y in (point(i, ring) for i in range(n)))
+        out.append(f'<polygon points="{pts}" fill="none" stroke="{th["border"]}" stroke-width="1"/>')
+    for i in range(n):
+        x, y = point(i, 10)
+        out.append(f'<line x1="{cx}" y1="{cy}" x2="{x:.1f}" y2="{y:.1f}" stroke="{th["border"]}"/>')
+    pts = " ".join(f"{x:.1f},{y:.1f}" for x, y in (point(i, s["value"]) for i, s in enumerate(skills)))
+    dots = "".join(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="3.5" fill="{th["accent"]}"/>'
+                   for x, y in (point(i, s["value"]) for i, s in enumerate(skills)))
+    out.append(f'<g class="grow" style="--o:{cx}px {cy}px;animation-delay:.2s">'
+               f'<polygon points="{pts}" fill="{th["accent"]}" fill-opacity=".22" stroke="{th["accent"]}" '
+               f'stroke-width="2" stroke-linejoin="round"/>{dots}</g>')
+    for i, s in enumerate(skills):
+        ang = -math.pi / 2 + i * 2 * math.pi / n
+        lx, ly = cx + math.cos(ang) * (r + 18), cy + math.sin(ang) * (r + 18)
+        cos = math.cos(ang)
+        anchor = "middle" if abs(cos) < 0.3 else ("start" if cos > 0 else "end")
+        ly += 5 + math.sin(ang) * 6
+        out.append(f'<text x="{lx:.1f}" y="{ly:.1f}" text-anchor="{anchor}" font-family="{SANS}" font-size="13" '
+                   f'fill="{th["text"]}">{t(s["name"])} <tspan fill="{th["muted"]}">{s["value"]}</tspan></text>')
+    return svg(W, H, "Radar de habilidades", "".join(out))
+
+
+def languages_card(mix: list[tuple[str, float, str]], th: dict) -> str:
+    W, H = 420, 195
+    out = [card(W, H, th), heading(24, 36, "cat lenguajes.txt", th)]
+    bar_x, bar_w = 24, 372
+    out.append(f'<clipPath id="bar"><rect x="{bar_x}" y="54" width="{bar_w}" height="10" rx="5"/></clipPath>')
+    out.append(f'<g clip-path="url(#bar)"><rect x="{bar_x}" y="54" width="{bar_w}" height="10" fill="{th["grid"]}"/>')
+    x = bar_x
+    for i, (_, pct, color) in enumerate(mix):
+        w = bar_w * pct / 100
+        out.append(f'<rect class="pop" style="animation-delay:{.15 + i * .08:.2f}s" x="{x:.1f}" y="54" '
+                   f'width="{w + .5:.1f}" height="10" fill="{color}"/>')
+        x += w
+    out.append("</g>")
+    for i, (name, pct, color) in enumerate(mix):
+        col, row = i % 2, i // 2
+        lx, ly = 24 + col * 198, 100 + row * 32
+        out.append(f'<g class="fade" style="animation-delay:{.3 + i * .06:.2f}s">'
+                   f'<circle cx="{lx + 5}" cy="{ly - 4}" r="5" fill="{color}"/>'
+                   f'<text x="{lx + 18}" y="{ly}" font-family="{SANS}" font-size="13" fill="{th["text"]}">{t(name)}</text>'
+                   f'<text x="{lx + 176}" y="{ly}" text-anchor="end" font-family="{MONO}" font-size="12" '
+                   f'fill="{th["muted"]}">{pct:.1f}%</text></g>')
+    return svg(W, H, "Lenguajes más usados", "".join(out))
+
+
+def stats_card(stats: list[tuple[str, str]], th: dict) -> str:
+    W, H = 420, 195
+    out = [card(W, H, th), heading(24, 36, "git log --stats", th),
+           f'<text x="396" y="36" text-anchor="end" font-family="{SANS}" font-size="12" '
+           f'fill="{th["muted"]}">últimos 12 meses</text>']
+    for i, (value, label) in enumerate(stats):
+        col, row = i % 3, i // 3
+        x, y = 24 + col * 132, 94 + row * 62
+        out.append(f'<g class="fade" style="animation-delay:{.15 + i * .07:.2f}s">'
+                   f'<text x="{x}" y="{y}" font-family="{MONO}" font-size="26" font-weight="700" '
+                   f'fill="{th["accent"] if i == 0 else th["text"]}">{t(value)}</text>'
+                   f'<text x="{x}" y="{y + 20}" font-family="{SANS}" font-size="12" fill="{th["muted"]}">{t(label)}</text></g>')
+    return svg(W, H, "Estadísticas de GitHub", "".join(out))
+
+
+def heatmap(weeks: list[dict], total: int, th: dict) -> str:
+    W, H = 880, 215
+    pitch, cell = 15, 11
+    x0, y0 = 52, 74
+    counts = sorted(d["contributionCount"] for w in weeks for d in w["contributionDays"] if d["contributionCount"])
+    quart = [counts[min(len(counts) - 1, int(len(counts) * p))] for p in (.25, .5, .75)] if counts else []
+
+    def level(c: int) -> int:
+        return 0 if not c else 1 + sum(c > q for q in quart)
+
+    out = [card(W, H, th), heading(24, 36, "git log --graph", th),
+           f'<text x="856" y="36" text-anchor="end" font-family="{SANS}" font-size="12" '
+           f'fill="{th["muted"]}">{total} contribuciones en el último año</text>']
+    for row, label in ((1, "lun"), (3, "mié"), (5, "vie")):
+        out.append(f'<text x="{x0 - 8}" y="{y0 + row * pitch + 9}" text-anchor="end" font-family="{SANS}" '
+                   f'font-size="10" fill="{th["muted"]}">{label}</text>')
+    last_month, last_x = None, -99
+    for wi, week in enumerate(weeks):
+        x = x0 + wi * pitch
+        first = week["contributionDays"][0]["date"]
+        month = int(first[5:7])
+        if month != last_month and x - last_x >= 3 * pitch:
+            out.append(f'<text x="{x}" y="{y0 - 10}" font-family="{SANS}" font-size="10" '
+                       f'fill="{th["muted"]}">{MESES[month - 1]}</text>')
+            last_x = x
+        last_month = month
+        cells = []
+        for day in week["contributionDays"]:
+            c = day["contributionCount"]
+            cells.append(f'<rect x="{x}" y="{y0 + weekday(day["date"]) * pitch}" width="{cell}" height="{cell}" rx="2" '
+                         f'fill="{th["levels"][level(c)]}"><title>{c} el {day["date"]}</title></rect>')
+        out.append(f'<g class="pop" style="animation-delay:{wi * .012:.3f}s">{"".join(cells)}</g>')
+    lx = 856 - 5 * pitch - 22
+    out.append(f'<text x="{lx - 6}" y="{H - 18}" text-anchor="end" font-family="{SANS}" font-size="10" '
+               f'fill="{th["muted"]}">menos</text>')
+    for i in range(5):
+        out.append(f'<rect x="{lx + i * pitch}" y="{H - 27}" width="{cell}" height="{cell}" rx="2" fill="{th["levels"][i]}"/>')
+    out.append(f'<text x="{lx + 5 * pitch + 2}" y="{H - 18}" font-family="{SANS}" font-size="10" '
+               f'fill="{th["muted"]}">más</text>')
+    return svg(W, H, "Gráfica de contribuciones", "".join(out))
+
+
+def weekday(date: str) -> int:
+    """Día de la semana con domingo = 0, como la gráfica de GitHub."""
+    return (dt.date.fromisoformat(date).weekday() + 1) % 7
+
+
+def project_card(project: dict, repo: dict | None, th: dict) -> str:
+    W, H = 400, 140
+    out = [card(W, H, th),
+           f'<text x="24" y="38" font-family="{MONO}" font-size="16" font-weight="700" fill="{th["accent2"]}">'
+           f'<tspan fill="{th["muted"]}">~/</tspan>{t(project["title"])}</text>']
+    for i, line in enumerate(wrap(project["description"], 50, 2)):
+        out.append(f'<text x="24" y="{66 + i * 19}" font-family="{SANS}" font-size="13" '
+                   f'fill="{th["text"]}">{t(line)}</text>')
+    x = 24
+    lang = (repo or {}).get("primaryLanguage")
+    if lang:
+        out.append(f'<circle cx="{x + 5}" cy="{H - 26}" r="5" fill="{lang["color"] or th["muted"]}"/>'
+                   f'<text x="{x + 16}" y="{H - 22}" font-family="{SANS}" font-size="12" '
+                   f'fill="{th["muted"]}">{t(lang["name"])}</text>')
+        x += 30 + len(lang["name"]) * 7
+    if repo and repo["stargazerCount"]:
+        out.append(f'<text x="{x}" y="{H - 22}" font-family="{SANS}" font-size="12" '
+                   f'fill="{th["muted"]}">★ {repo["stargazerCount"]}</text>')
+    if repo and repo.get("homepageUrl"):
+        out.append(f'<text x="376" y="{H - 22}" text-anchor="end" font-family="{MONO}" font-size="12" '
+                   f'fill="{th["accent"]}">demo ↗</text>')
+    return svg(W, H, project["title"], "".join(out), css="")
+
+
+# ----------------------------------------------------------------- main ---
+
+def write(name: str, content: str) -> None:
+    (ASSETS / name).write_text(content, encoding="utf-8", newline="\n")
+    print(f"  assets/{name}")
+
+
+def main() -> None:
+    cfg = json.loads((ASSETS / "profile.json").read_text(encoding="utf-8"))
+    data = fetch(cfg, get_token())
+    user = data["user"]
+    coll = user["contributionsCollection"]
+    weeks = coll["contributionCalendar"]["weeks"]
+    counts = [d["contributionCount"] for w in weeks for d in w["contributionDays"]]
+    current, longest = streaks(counts)
+    repos = user["repositories"]
+    stats = [
+        (str(coll["contributionCalendar"]["totalContributions"]), "contribuciones"),
+        (str(coll["totalCommitContributions"]), "commits"),
+        (str(sum(1 for c in counts if c)), "días activos"),
+        (f"{current}d", "racha actual"),
+        (f"{longest}d", "racha más larga"),
+        (str(repos["totalCount"]), "repositorios"),
+    ]
+    mix = language_mix(repos["nodes"], cfg.get("include_private_languages", False),
+                       set(cfg.get("ignore_languages", [])))
+
+    print("Generando:")
+    for name, th in THEMES.items():
+        write(f"banner-{name}.svg", banner(cfg, user, th))
+        write(f"radar-{name}.svg", radar(cfg, th))
+        write(f"card-langs-{name}.svg", languages_card(mix, th))
+        write(f"card-stats-{name}.svg", stats_card(stats, th))
+        write(f"heatmap-{name}.svg", heatmap(weeks, coll["contributionCalendar"]["totalContributions"], th))
+        for i, project in enumerate(cfg["projects"]):
+            write(f"project-{project['repo']}-{name}.svg", project_card(project, data.get(f"p{i}"), th))
+
+
+if __name__ == "__main__":
+    main()
